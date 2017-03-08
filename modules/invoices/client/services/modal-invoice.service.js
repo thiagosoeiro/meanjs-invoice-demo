@@ -12,7 +12,7 @@
         templateUrl: 'modules/invoices/client/views/modal-invoice.html',
         controllerAs: 'modal',
         controller: 'ModalInvoiceController',
-        size: 'lg'
+        size: 'md'
       });
     };
 

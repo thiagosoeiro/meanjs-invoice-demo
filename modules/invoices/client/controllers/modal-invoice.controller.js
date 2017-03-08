@@ -1,24 +1,42 @@
 (function () {
-    'use strict';
+  'use strict';
 
-    /** @ngInject */
-    function ModalInvoiceController($modalInstance, $rootScope) {
-        var vm = this;
+  /** @ngInject */
+  function ModalInvoiceController($modalInstance, $rootScope, $state) {
+    var vm = this;
 
 
-        vm.cancel = function () {
-            $modalInstance.dismiss();
-        };
+    vm.cancel = function () {
+      $modalInstance.dismiss();
+    };
 
-        vm.init = function () {
-            vm.isLoading = false;
-            vm.invoice = $rootScope.invoice;
-        };
+    // Save Invoice
+    vm.save = function () {
+      if (vm.invoice._id) {
+        vm.invoice.$update(successCallback, errorCallback);
+      } else {
+        vm.invoice.$save(successCallback, errorCallback);
+      }
+      
+      function successCallback(res) {
+        // $state.go('invoices.create');
+        $state.go($state.current, {}, {reload: true}); 
+      }
 
-        vm.init();
-    }
+      function errorCallback(res) {
+        vm.error = res.data.message;
+      }
+    };
 
-    angular.module('invoices')
-        .controller('ModalInvoiceController', ModalInvoiceController);
+    vm.init = function () {
+      vm.isLoading = false;
+      vm.invoice = $rootScope.invoice;
+    };
+
+    vm.init();
+  }
+
+  angular.module('invoices')
+    .controller('ModalInvoiceController', ModalInvoiceController);
 
 })();

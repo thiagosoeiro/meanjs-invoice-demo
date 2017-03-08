@@ -4,12 +4,24 @@
     <h4 class="modal-title">Send Invoice</h4>
   </div>
   <div class="modal-body">
-
+    
+    
+    <!--<div class="form-group">
+			<label class="control-label col-sm-3">
+				To <span class="required">*</span>
+			</label>
+			<div class="col-sm-9">
+				<div class="input-group">
+					<span class="input-group-addon ng-binding">ryr45645</span>
+					<input type="email" class="" placeholder="Your client's email address" name="to" ng-model="email.to" required>
+				</div>
+			</div>
+		</div>-->
 
 
   </div>
   <div class="modal-footer">
-    <button class="btn btn-primary" type="button" ng-click="ok()">Send</button>
+    <button class="btn btn-primary" type="button" ng-click="modal.save()">Send</button>
     <button class="btn btn-warning" ng-click="modal.cancel()">Cancel</button>
 
   </div>

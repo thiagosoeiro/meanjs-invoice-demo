@@ -13,11 +13,11 @@
 
     vm.authentication = Authentication;
     vm.invoice = invoice;
+    vm.invoice.title = "Invoice";
     vm.invoice.items = [];
     vm.error = null;
     vm.form = {};
     vm.remove = remove;
-    vm.save = save;
     vm.newItem = {};
 
     /*Date component properties and validation*/
@@ -79,7 +79,6 @@
         $scope.$broadcast('show-errors-check-validity', 'vm.form.invoiceForm');
         //return false; //todo - uncomment
       }
-
       var modalInstance = ModalInvoice.open(invoice);
       modalInstance.result.then(function () {
       }).catch(function () {
@@ -91,31 +90,6 @@
       if ($window.confirm('Are you sure you want to delete?')) {
         vm.invoice.$remove($state.go('invoices.list'));
       }
-    }
-
-    // Save Invoice
-    function save(isValid) {
-      if (!isValid) {
-        $scope.$broadcast('show-errors-check-validity', 'vm.form.invoiceForm');
-        return false;
-      }
-
-      // TODO: move create/update logic to service
-      if (vm.invoice._id) {
-        vm.invoice.$update(successCallback, errorCallback);
-      } else {
-        vm.invoice.$save(successCallback, errorCallback);
-      }
-
-      function successCallback(res) {
-        $state.go('invoices.view', {
-          invoiceId: res._id
-        });
-      }
-
-      function errorCallback(res) {
-        vm.error = res.data.message;
-      }
-    }
+    }  
   }
 }());
