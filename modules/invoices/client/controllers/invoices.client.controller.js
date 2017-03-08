@@ -6,9 +6,9 @@
     .module('invoices')
     .controller('InvoicesController', InvoicesController);
 
-  InvoicesController.$inject = ['$scope', '$state', '$window', 'Authentication', 'invoiceResolve'];
+  InvoicesController.$inject = ['$scope', '$state', '$window', 'Authentication', 'invoiceResolve', '$modal', 'ModalInvoice'];
 
-  function InvoicesController($scope, $state, $window, Authentication, invoice) {
+  function InvoicesController($scope, $state, $window, Authentication, invoice, $modal, ModalInvoice) {
     var vm = this;
 
     vm.authentication = Authentication;
@@ -20,6 +20,7 @@
     vm.save = save;
     vm.newItem = {};
 
+    /*Date component properties and validation*/
     vm.disabled = function (date, mode) {
       return (mode === 'day' && (date.getDay() === 0 || date.getDay() === 6));
     };
@@ -35,32 +36,32 @@
       formatYear: 'yy',
       startingDay: 1
     };
-
     vm.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
     vm.format = vm.formats[1];
     vm.status = {
       opened: false,
       opened2: false
     };
+    /*End of date component properties and validation*/
 
     vm.calculateItemAmount = function () {
       if (vm.newItem.quantity && vm.newItem.rate) {
         vm.newItem.amount = vm.newItem.quantity * vm.newItem.rate;
       }
-    }
+    };
 
     vm.addNewItem = function (item) {
       if (isItemValid(item)) {
         vm.invoice.items.push({ description: item.description, quantity: item.quantity, rate: item.rate, amount: item.amount });
         vm.newItem = undefined;
       }
-    }
+    };
 
     vm.updateItem = function (item, form, index) {
       if (isItemValid(item)) {
         item.$edit = false;
       }
-    }
+    };
 
     vm.deleteItem = function (item, index) {
       vm.invoice.items.splice(index, 1);
@@ -71,7 +72,19 @@
         return true;
       }
       return false;
-    }
+    };
+
+    vm.openModal = function (invoice, isValid) {
+      if (!isValid) {
+        $scope.$broadcast('show-errors-check-validity', 'vm.form.invoiceForm');
+        //return false; //todo - uncomment
+      }
+
+      var modalInstance = ModalInvoice.open(invoice);
+      modalInstance.result.then(function () {
+      }).catch(function () {
+      });
+    };
 
     // Remove existing Invoice
     function remove() {
