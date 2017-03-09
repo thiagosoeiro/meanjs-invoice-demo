@@ -104,6 +104,11 @@ var InvoiceSchema = new Schema({
       trim: true
     }
   }],
+  total: {
+    type: Number,
+    default: '',
+    trim: true
+  },
   amountPaid: {
     type: Number,
     default: '',

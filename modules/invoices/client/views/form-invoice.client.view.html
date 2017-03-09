@@ -1,10 +1,8 @@
 <section>
   <div class="page-header">
-    <!--<h1>Invoice Generator</h1>-->
     <div class='row'>
       <div class='col-sm-4 pull-right'>
         <div class="form-group">
-          <!--<label class="control-label" for="invoiceTitle">Title</label>-->
           <input name="invoiceTitle" type="text" ng-model="vm.invoice.title" id="invoiceTitle" class="form-control input-lg" required>
           <div ng-messages="vm.form.invoiceForm.invoiceTitle.$error" role="alert">
             <p class="help-block error-text" ng-message="required">Invoice title is required.</p>
@@ -13,7 +11,6 @@
       </div>
     </div>
   </div>
-
 
   <div class="col-md-12">
     <form name="vm.form.invoiceForm" ng-submit="vm.save(vm.form.invoiceForm.$valid)" novalidate>
@@ -163,7 +160,7 @@
             <div class="form-group">
               <label class="control-label" for="itemAmount">Amount ($)</label>
               <input input type="number" min="1" step="any" name="itemAmount" type="text" ng-model="vm.newItem.amount" id="itemAmount"
-                class="form-control" disabled>
+                class="form-control" readonly>
             </div>
           </div>
           <div class='col-sm-1'>
@@ -227,6 +224,13 @@
                 </tbody>
               </table>
             </div>
+          </div>
+        </div>
+
+        <div class='row'>
+          <div class='col-sm-4 pull-right text-right'>
+            <span ng-if="vm.invoice.total">Total: ${{vm.invoice.total}}</span>
+            <span ng-if="!vm.invoice.total">Total: $0</span>
           </div>
         </div>
 

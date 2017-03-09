@@ -26,7 +26,7 @@
     };
     vm.maxDate = new Date(2020, 5, 22);
     vm.open = function ($event, element) {
-      if (element == 0) {
+      if (element === 0) {
         vm.status.opened = true;
       } else {
         vm.status.opened2 = true;
