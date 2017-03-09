@@ -67,7 +67,7 @@
             <div class="form-group" show-errors>
               <label class="control-label" for="senderEmail">Sender E-mail</label>
               <input name="senderEmail" type="email" ng-model="vm.invoice.senderEmail" id="senderEmail" class="form-control" lowercase
-                required>
+                required placeholder="Your e-mail address">
               <div ng-messages="vm.form.invoiceForm.senderEmail.$error" role="alert">
                 <p class="help-block error-text" ng-message="required">Invoice sender e-mail is required.</p>
                 <p class="help-block error-text" ng-message="email">Email address is invalid.</p>
@@ -78,7 +78,7 @@
             <div class="form-group" show-errors>
               <label class="control-label" for="receiverEmail">Receiver E-mail</label>
               <input name="receiverEmail" type="email" ng-model="vm.invoice.receiverEmail" id="receiverEmail" class="form-control" lowercase
-                required>
+                required placeholder="Your client's e-mail address">
               <div ng-messages="vm.form.invoiceForm.receiverEmail.$error" role="alert">
                 <p class="help-block error-text" ng-message="required">Invoice receiver e-mail is required.</p>
                 <p class="help-block error-text" ng-message="email">Email address is invalid.</p>
