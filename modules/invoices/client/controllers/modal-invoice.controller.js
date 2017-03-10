@@ -2,7 +2,7 @@
   'use strict';
 
   /** @ngInject */
-  function ModalInvoiceController($modalInstance, $scope, $rootScope, $state, INVOICE_CONSTANTS) {
+  function ModalInvoiceController($modalInstance, $scope, $rootScope, $state, INVOICE_CONSTANTS, toaster) {
     var vm = this;
 
     //todo: generate pdf

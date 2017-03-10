@@ -6,9 +6,9 @@
     .module('invoices')
     .controller('InvoicesController', InvoicesController);
 
-  InvoicesController.$inject = ['$scope', '$state', '$window', 'Authentication', 'invoiceResolve', '$modal', 'ModalInvoice'];
+  InvoicesController.$inject = ['$modal', '$scope', '$state', '$timeout', '$window', 'Authentication', 'invoiceResolve', 'ModalInvoice', 'toaster'];
 
-  function InvoicesController($scope, $state, $window, Authentication, invoice, $modal, ModalInvoice) {
+  function InvoicesController($modal, $scope, $state, $timeout, $window, Authentication, invoice, ModalInvoice, toaster) {
     var vm = this;
 
     vm.authentication = Authentication;
@@ -77,7 +77,7 @@
     vm.openModal = function (invoice, isValid) {
       if (!isValid) {
         $scope.$broadcast('show-errors-check-validity', 'vm.form.invoiceForm');
-        //return false; //todo - uncomment
+        return false; //todo - uncomment
       }
       var modalInstance = ModalInvoice.open(invoice);
       modalInstance.result.then(function () {
@@ -86,8 +86,13 @@
     };
 
     $scope.$on("refreshInvoicePage", function () {
-      $state.go($state.current, {}, {reload: true});
+      $state.go($state.current, {}, { reload: true });
+      $timeout(showAlert, 500);
     });
+
+    function showAlert() {
+      toaster.pop('success', "Thank you for invoicing with us!", "Your invoice has been sent!");
+    }
 
     // Remove existing Invoice
     function remove() {
