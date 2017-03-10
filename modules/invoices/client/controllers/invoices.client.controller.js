@@ -85,11 +85,15 @@
       });
     };
 
+    $scope.$on("refreshInvoicePage", function () {
+      $state.go($state.current, {}, {reload: true});
+    });
+
     // Remove existing Invoice
     function remove() {
       if ($window.confirm('Are you sure you want to delete?')) {
         vm.invoice.$remove($state.go('invoices.list'));
       }
-    }  
+    }
   }
 }());

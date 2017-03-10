@@ -13,9 +13,10 @@
 
     // Save Invoice
     vm.save = function (isValid) {
-
+      vm.isLoading = true;
       if (!isValid) {
         $scope.$broadcast('show-errors-check-validity', 'form');
+        vm.isLoading = false;
         return false;
       }
 
@@ -26,11 +27,13 @@
       }
 
       function successCallback(res) {
-        // $state.go('invoices.create');
-        $state.go($state.current, {}, { reload: true });
+        vm.isLoading = false;
+        $modalInstance.dismiss();
+        $rootScope.$broadcast('refreshInvoicePage');
       }
 
       function errorCallback(res) {
+        vm.isLoading = false;
         vm.error = res.data.message;
       }
     };

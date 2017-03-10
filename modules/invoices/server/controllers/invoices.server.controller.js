@@ -4,25 +4,45 @@
  * Module dependencies.
  */
 var path = require('path'),
+  nodemailer = require('nodemailer'),
+  config = require(path.resolve('./config/config')),
   mongoose = require('mongoose'),
   Invoice = mongoose.model('Invoice'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   _ = require('lodash');
 
+var transporter = nodemailer.createTransport(config.mailer.options);
+
 /**
  * Create a Invoice
  */
-exports.create = function(req, res) {
+exports.create = function (req, res) {
   var invoice = new Invoice(req.body);
   invoice.user = req.user;
 
-  invoice.save(function(err) {
+  invoice.save(function (err) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      res.jsonp(invoice);
+      //send mail
+      var mailOptions = {
+        to: invoice.receiverEmail,
+        from: invoice.senderEmail,
+        subject: invoice.subject,
+        text: req.body.message,
+        html: req.body.message
+      };
+      transporter.sendMail(mailOptions, function (err) {
+        if (err) {
+          return res.status(400).send({
+            message: 'Failure sending email'
+          });
+        } else {
+          res.jsonp(invoice);
+        }
+      });
     }
   });
 };
@@ -30,7 +50,7 @@ exports.create = function(req, res) {
 /**
  * Show the current Invoice
  */
-exports.read = function(req, res) {
+exports.read = function (req, res) {
   // convert mongoose document to JSON
   var invoice = req.invoice ? req.invoice.toJSON() : {};
 
@@ -44,12 +64,12 @@ exports.read = function(req, res) {
 /**
  * Update a Invoice
  */
-exports.update = function(req, res) {
+exports.update = function (req, res) {
   var invoice = req.invoice;
 
   invoice = _.extend(invoice, req.body);
 
-  invoice.save(function(err) {
+  invoice.save(function (err) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -63,10 +83,10 @@ exports.update = function(req, res) {
 /**
  * Delete an Invoice
  */
-exports.delete = function(req, res) {
+exports.delete = function (req, res) {
   var invoice = req.invoice;
 
-  invoice.remove(function(err) {
+  invoice.remove(function (err) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -80,8 +100,8 @@ exports.delete = function(req, res) {
 /**
  * List of Invoices
  */
-exports.list = function(req, res) {
-  Invoice.find().sort('-created').populate('user', 'displayName').exec(function(err, invoices) {
+exports.list = function (req, res) {
+  Invoice.find().sort('-created').populate('user', 'displayName').exec(function (err, invoices) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -95,7 +115,7 @@ exports.list = function(req, res) {
 /**
  * Invoice middleware
  */
-exports.invoiceByID = function(req, res, next, id) {
+exports.invoiceByID = function (req, res, next, id) {
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).send({

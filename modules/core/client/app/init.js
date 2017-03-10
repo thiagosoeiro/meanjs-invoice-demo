@@ -41,6 +41,7 @@ angular.module(ApplicationConfiguration.applicationModuleName).run(function ($ro
   // Record previous state
   $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
     storePreviousState(fromState, fromParams);
+    window.scrollTo(0, 0);
   });
 
   // Store previous state
