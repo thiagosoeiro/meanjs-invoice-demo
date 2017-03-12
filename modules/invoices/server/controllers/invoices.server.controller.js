@@ -30,7 +30,7 @@ exports.create = function (req, res) {
       var mailOptions = {
         to: invoice.receiverEmail,
         from: invoice.senderEmail,
-        subject: invoice.subject,
+        subject: req.body.subject,
         text: req.body.message,
         html: req.body.message
       };

@@ -45,11 +45,12 @@
       //Mail data
       vm.invoice.subject = ['Invoice from', vm.invoice.senderName, '|', '#', vm.invoice.number].join(' ');
 
-      //sets the mail body with tags replacement
       vm.invoice.message = INVOICE_CONSTANTS.currentMessage;
       //todo: use lodash instead
+      //sets the mail body with tags replacement
       INVOICE_CONSTANTS.messageTags.forEach(function (item) {
-        vm.invoice.message = vm.invoice.message.replace(item.tag, vm.invoice[item.replaceWith]);
+        vm.invoice.message = vm.invoice.message.replace(item.tag,
+          vm.invoice[item.replaceWith] === undefined ? '' : vm.invoice[item.replaceWith]);
       });
     };
 
