@@ -44,34 +44,54 @@
     };
     /*End of date component properties and validation*/
 
-    vm.calculateItemAmount = function () {
-      if (vm.newItem.quantity && vm.newItem.rate) {
-        vm.newItem.amount = vm.newItem.quantity * vm.newItem.rate;
+    vm.calculateItemAmount = function (item) {
+      if (item.quantity && item.rate) {
+        item.amount = item.quantity * item.rate;
       }
+
     };
+
+    vm.processValues = function () {
+      if (vm.invoice.items.length) {
+        var array = vm.invoice.items.map(function (a) { return a.amount; });
+        var sum = array.reduce((a, b) => a + b, 0);
+        vm.invoice.total = sum;
+        vm.invoice.balanceDue = vm.invoice.total -
+          (vm.invoice.amountPaid === undefined ? 0
+          : vm.invoice.amountPaid);
+        return;
+      }
+      vm.invoice.total = 0;
+      vm.invoice.balanceDue = 0 -
+        (vm.invoice.amountPaid === undefined ? 0
+        : vm.invoice.amountPaid);
+    }
 
     vm.addNewItem = function (item) {
       if (isItemValid(item)) {
-        vm.invoice.items.push({ description: item.description, quantity: item.quantity, rate: item.rate, amount: item.amount });
+        vm.invoice.items.push({
+          description: item.description, quantity: item.quantity,
+          rate: item.rate, amount: item.amount
+        });
+        vm.processValues();
         vm.newItem = undefined;
       }
     };
 
     vm.updateItem = function (item, form, index) {
       if (isItemValid(item)) {
+        vm.processValues();
         item.$edit = false;
       }
     };
 
     vm.deleteItem = function (item, index) {
       vm.invoice.items.splice(index, 1);
+      vm.processValues();
     };
 
     function isItemValid(item) {
-      if (item.description && item.quantity && item.rate && item.amount) {
-        return true;
-      }
-      return false;
+      return item.description && item.quantity && item.rate && item.amount;
     };
 
     vm.openModal = function (invoice, isValid) {

@@ -147,13 +147,13 @@
             <div class="form-group">
               <label class="control-label" for="itemQuantity">Quantity</label>
               <input onkeypress='return event.charCode >= 48 && event.charCode <= 57' name="itemQuantity" type="text" ng-model="vm.newItem.quantity"
-                ng-change="vm.calculateItemAmount()" id="itemQuantity" class="form-control" placeholder="Quantity">
+                ng-change="vm.calculateItemAmount(vm.newItem)" id="itemQuantity" class="form-control" placeholder="Quantity">
             </div>
           </div>
           <div class='col-sm-2'>
             <div class="form-group">
               <label class="control-label" for="itemRate">Rate ($)</label>
-              <input type="number" min="1" step="any" name="itemRate" type="text" ng-model="vm.newItem.rate" ng-change="vm.calculateItemAmount()"
+              <input type="number" min="1" step="any" name="itemRate" type="text" ng-model="vm.newItem.rate" ng-change="vm.calculateItemAmount(vm.newItem)"
                 id="itemRate" class="form-control" placeholder="Rate">
             </div>
           </div>
@@ -202,7 +202,8 @@
                       <span ng-if="!item.$edit">{{ item.quantity }}</span>
                       <div ng-if="item.$edit">
                         <input onkeypress='return event.charCode >= 48 && event.charCode <= 57' type="text" class="form-control" ng-model="item.quantity"
-                          name="itemQuantityArray{{$index}}" id="itemQuantityArray{{$index}}" />
+                          name="itemQuantityArray{{$index}}" id="itemQuantityArray{{$index}}" ng-change="vm.calculateItemAmount(item)"
+                        />
                       </div>
                     </td>
 
@@ -210,7 +211,7 @@
                       <span ng-if="!item.$edit">{{ item.rate }}</span>
                       <div ng-if="item.$edit">
                         <input type="number" min="1" step="any" class="form-control" ng-model="item.rate" name="itemRateArray{{$index}}" id="itemRateArray{{$index}}"
-                        />
+                          ng-change="vm.calculateItemAmount(item)" />
                       </div>
                     </td>
 
@@ -236,11 +237,11 @@
         </div>
 
         <div class='row'>
-          <div class='col-sm-4 pull-right text-right'>
+          <div class='col-sm-4 pull-right'>
             <div class="form-group" show-errors>
               <label class="control-label" for="itemAmountPaid">Amount Paid ($)</label>
               <input type="number" min="1" step="any" name="itemAmountPaid" type="text" ng-model="vm.invoice.amountPaid" id="itemAmountPaid"
-                class="form-control" placeholder="Amount Paid" required>
+                class="form-control" placeholder="Amount Paid" ng-change="vm.processValues()" required>
               <div ng-messages="vm.form.invoiceForm.itemAmountPaid.$error" role="alert">
                 <p class="help-block error-text" ng-message="required">Invoice amount paid is required.</p>
               </div>
