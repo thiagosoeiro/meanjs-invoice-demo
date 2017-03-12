@@ -13,8 +13,8 @@
 
     vm.authentication = Authentication;
     vm.invoice = invoice;
-    vm.invoice.title = "Invoice";
-    vm.invoice.items = [];
+    vm.invoice.title = vm.invoice.title === undefined ? 'Invoice' : vm.invoice.title;
+    vm.invoice.items = vm.invoice.items === undefined ? [] : vm.invoice.items;
     vm.error = null;
     vm.form = {};
     vm.remove = remove;
@@ -58,13 +58,13 @@
         vm.invoice.total = sum;
         vm.invoice.balanceDue = vm.invoice.total -
           (vm.invoice.amountPaid === undefined ? 0
-          : vm.invoice.amountPaid);
+            : vm.invoice.amountPaid);
         return;
       }
       vm.invoice.total = 0;
       vm.invoice.balanceDue = 0 -
         (vm.invoice.amountPaid === undefined ? 0
-        : vm.invoice.amountPaid);
+          : vm.invoice.amountPaid);
     }
 
     vm.addNewItem = function (item) {

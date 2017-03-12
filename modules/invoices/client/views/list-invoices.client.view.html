@@ -7,13 +7,13 @@
        ui-sref="invoices.view({ invoiceId: invoice._id })"
        class="list-group-item">
       <small class="list-group-item-text">
-        Posted on
+        Created on
         <span ng-bind="invoice.created | date:'mediumDate'"></span>
         by
         <span ng-if="invoice.user" ng-bind="invoice.user.displayName"></span>
         <span ng-if="!invoice.user">Deleted User</span>
       </small>
-      <h4 class="list-group-item-heading" ng-bind="invoice.name"></h4>
+      <h4 class="list-group-item-heading"><span>{{invoice.title}} - #{{invoice.number}}</span></h4>
     </a>
   </div>
   <div class="alert alert-warning text-center" ng-if="vm.invoices.$resolved && !vm.invoices.length">
