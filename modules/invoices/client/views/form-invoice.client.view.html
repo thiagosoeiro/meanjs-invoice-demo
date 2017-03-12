@@ -1,0 +1,290 @@
+<section>
+  <toaster-container></toaster-container>
+  <div class="page-header">
+    <div class='row'>
+      <div class='col-sm-4 pull-right'>
+        <div class="form-group">
+          <input name="invoiceTitle" type="text" ng-model="vm.invoice.title" id="invoiceTitle" class="form-control input-lg" required>
+          <div ng-messages="vm.form.invoiceForm.invoiceTitle.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Invoice title is required.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-12">
+    <form name="vm.form.invoiceForm" ng-submit="vm.save(vm.form.invoiceForm.$valid)" novalidate>
+      <fieldset>
+        <legend>Billing Information</legend>
+
+        <!--First row-->
+        <div class='row'>
+          <div class='col-sm-4'>
+            <div class="form-group" show-errors>
+              <label class="control-label" for="number">Invoice Number</label>
+              <p class="input-group">
+                <span class="input-group-addon">#</span>
+                <input name="number" type="text" ng-model="vm.invoice.number" id="number" class="form-control" placeholder="" required>
+                <div ng-messages="vm.form.invoiceForm.number.$error" role="alert">
+                  <p class="help-block error-text" ng-message="required">Invoice number is required.</p>
+                </div>
+            </div>
+          </div>
+          <div class='col-sm-4'>
+            <div class="form-group" show-errors>
+              <label class="control-label" for="senderName">From</label>
+              <input name="senderName" type="text" ng-model="vm.invoice.senderName" id="senderName" class="form-control" placeholder="Who is this invoice from? (required)"
+                required>
+              <div ng-messages="vm.form.invoiceForm.senderName.$error" role="alert">
+                <p class="help-block error-text" ng-message="required">Invoice sender name is required.</p>
+              </div>
+            </div>
+          </div>
+          <div class='col-sm-4'>
+            <div class="form-group" show-errors>
+              <label class="control-label" for="receiverName">Bill to</label>
+              <input name="receiverName" type="text" ng-model="vm.invoice.receiverName" id="receiverName" class="form-control" placeholder="Who is this invoice to? (required)"
+                required>
+              <div ng-messages="vm.form.invoiceForm.receiverName.$error" role="alert">
+                <p class="help-block error-text" ng-message="required">Invoice receiver name is required.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!--Second row-->
+        <div class='row'>
+          <div class='col-sm-4'>
+            <div class="form-group" show-errors>
+              <label class="control-label" for="paymentTerms">Payment Terms</label>
+              <input name="paymentTerms" type="text" ng-model="vm.invoice.paymentTerms" id="paymentTerms" class="form-control" required>
+              <div ng-messages="vm.form.invoiceForm.paymentTerms.$error" role="alert">
+                <p class="help-block error-text" ng-message="required">Invoice payment terms is required.</p>
+              </div>
+            </div>
+          </div>
+          <div class='col-sm-4'>
+            <div class="form-group" show-errors>
+              <label class="control-label" for="senderEmail">Sender E-mail</label>
+              <input name="senderEmail" type="email" ng-model="vm.invoice.senderEmail" id="senderEmail" class="form-control" lowercase
+                required placeholder="Your e-mail address">
+              <div ng-messages="vm.form.invoiceForm.senderEmail.$error" role="alert">
+                <p class="help-block error-text" ng-message="required">Invoice sender e-mail is required.</p>
+                <p class="help-block error-text" ng-message="email">Email address is invalid.</p>
+              </div>
+            </div>
+          </div>
+          <div class='col-sm-4'>
+            <div class="form-group" show-errors>
+              <label class="control-label" for="receiverEmail">Receiver E-mail</label>
+              <input name="receiverEmail" type="email" ng-model="vm.invoice.receiverEmail" id="receiverEmail" class="form-control" lowercase
+                required placeholder="Your client's e-mail address">
+              <div ng-messages="vm.form.invoiceForm.receiverEmail.$error" role="alert">
+                <p class="help-block error-text" ng-message="required">Invoice receiver e-mail is required.</p>
+                <p class="help-block error-text" ng-message="email">Email address is invalid.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!--Third row-->
+        <div class='row'>
+          <div class='col-sm-4'>
+            <div class="form-group" show-errors>
+              <label class="control-label" for="dateField">Date</label>
+              <p class="input-group">
+                <input type="text" name="dateField" id="dateField" class="form-control" datepicker-popup="{{vm.format}}" ng-model="vm.invoice.invoiceDate"
+                  is-open="vm.status.opened" min-date="vm.minDate" max-date="vm.maxDate" datepicker-options="vm.dateOptions"
+                  date-disabled="vm.disabled(date, mode)" required close-text="Close" />
+                <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="vm.open($event, 0)"><i class="glyphicon glyphicon-calendar"></i></button>
+              </span>
+              </p>
+              <div ng-messages="vm.form.invoiceForm.dateField.$error" role="alert">
+                <p class="help-block error-text" ng-message="required">Invoice date is required.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class='col-sm-4'>
+            <div class="form-group" show-errors>
+              <label class="control-label" for="dueDateField">Due Date</label>
+              <p class="input-group">
+                <input type="text" name="dueDateField" id="dueDateField" class="form-control" datepicker-popup="{{vm.format}}" ng-model="vm.invoice.invoiceDueDate"
+                  is-open="vm.status.opened2" min-date="vm.minDate" max-date="vm.maxDate" datepicker-options="vm.dateOptions"
+                  date-disabled="vm.disabled(date, mode)" required close-text="Close" />
+                <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="vm.open($event, 1)"><i class="glyphicon glyphicon-calendar"></i></button>
+              </span>
+              </p>
+              <div ng-messages="vm.form.invoiceForm.dueDateField.$error" role="alert">
+                <p class="help-block error-text" ng-message="required">Invoice due date is required.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <div class='row'>
+          <div class='col-sm-4 pull-right text-right'>
+            <h4 ng-if="vm.invoice.balanceDue"><span>Balance Due: ${{vm.invoice.balanceDue}}</span></h4>
+            <h4 ng-if="!vm.invoice.balanceDue"><span>Balance Due: $0</span></h4>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Items Information</legend>
+        <div class='row'>
+          <div class='col-sm-5'>
+            <div class="form-group">
+              <label class="control-label" for="itemDescription">Item</label>
+              <input name="itemDescription" type="text" ng-model="vm.newItem.description" id="itemDescription" class="form-control" placeholder="Description of service or product...">
+            </div>
+          </div>
+          <div class='col-sm-2'>
+            <div class="form-group">
+              <label class="control-label" for="itemQuantity">Quantity</label>
+              <input onkeypress='return event.charCode >= 48 && event.charCode <= 57' name="itemQuantity" type="text" ng-model="vm.newItem.quantity"
+                ng-change="vm.calculateItemAmount(vm.newItem)" id="itemQuantity" class="form-control" placeholder="Quantity">
+            </div>
+          </div>
+          <div class='col-sm-2'>
+            <div class="form-group">
+              <label class="control-label" for="itemRate">Rate ($)</label>
+              <input type="number" min="1" step="any" name="itemRate" type="text" ng-model="vm.newItem.rate" ng-change="vm.calculateItemAmount(vm.newItem)"
+                id="itemRate" class="form-control" placeholder="Rate">
+            </div>
+          </div>
+          <div class='col-sm-2'>
+            <div class="form-group">
+              <label class="control-label" for="itemAmount">Amount ($)</label>
+              <input input type="number" min="1" step="any" name="itemAmount" type="text" ng-model="vm.newItem.amount" id="itemAmount"
+                class="form-control" readonly>
+            </div>
+          </div>
+          <div class='col-sm-1'>
+            <button type="button" title="Add new item" name="plusButton" id="plusButton" class="btn btn-primary btn-lg btn-block waves-effect"
+              ng-click="vm.addNewItem(vm.newItem)" style="margin-top: 15px !important;"><i class="glyphicon glyphicon-plus"></i></button>
+          </div>
+        </div>
+
+
+        <div class='row'>
+          <div class='col-sm-12'>
+            <div ng-if="!vm.invoice.items.length" class="alert alert-info alert-dismissable" type="info">
+              <div class="text-center"><span>No items added.</span></div>
+            </div>
+
+            <div class="table-responsive" ng-if="vm.invoice.items.length">
+              <table class="table table-striped table-vmiddle">
+                <thead>
+                  <tr>
+                    <th>Item Description</th>
+                    <th>Quantity</th>
+                    <th>Rate ($)</th>
+                    <th>Amount ($)</th>
+                    <th class="text-center">Options</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr ng-repeat="item in vm.invoice.items" ng-class="{ 'active': item.$edit }">
+                    <td>
+                      <span ng-if="!item.$edit">{{ item.description }}</span>
+                      <div ng-if="item.$edit">
+                        <input type="text" class="form-control" ng-model="item.description" name="itemDescriptionArray{{$index}}" id="itemDescriptionArray{{$index}}"
+                        />
+                      </div>
+                    </td>
+
+                    <td>
+                      <span ng-if="!item.$edit">{{ item.quantity }}</span>
+                      <div ng-if="item.$edit">
+                        <input onkeypress='return event.charCode >= 48 && event.charCode <= 57' type="text" class="form-control" ng-model="item.quantity"
+                          name="itemQuantityArray{{$index}}" id="itemQuantityArray{{$index}}" ng-change="vm.calculateItemAmount(item)"
+                        />
+                      </div>
+                    </td>
+
+                    <td>
+                      <span ng-if="!item.$edit">{{ item.rate }}</span>
+                      <div ng-if="item.$edit">
+                        <input type="number" min="1" step="any" class="form-control" ng-model="item.rate" name="itemRateArray{{$index}}" id="itemRateArray{{$index}}"
+                          ng-change="vm.calculateItemAmount(item)" />
+                      </div>
+                    </td>
+
+                    <td>{{item.amount}}</td>
+
+                    <td class="text-center">
+                      <button title="Edit item" type="button" class="btn btn-default waves-effect" ng-if="!item.$edit" ng-click="item.$edit = true"><i class="glyphicon glyphicon-pencil"></i></button>
+                      <button title="Confirm item" type="button" class="btn btn-success" ng-if="item.$edit" ng-click="vm.updateItem(item, vm.form.invoiceForm, $index)"><i class="glyphicon glyphicon-ok"></i></button>
+                      <button title="Delete item" ng-click="vm.deleteItem(item, $index)" type="button" class="btn btn-default waves-effect"><i class="glyphicon glyphicon-remove"></i></button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class='row'>
+          <div class='col-sm-4 pull-right text-right'>
+            <span ng-if="vm.invoice.total">Total: ${{vm.invoice.total}}</span>
+            <span ng-if="!vm.invoice.total">Total: $0</span>
+          </div>
+        </div>
+
+        <div class='row'>
+          <div class='col-sm-4 pull-right'>
+            <div class="form-group" show-errors>
+              <label class="control-label" for="itemAmountPaid">Amount Paid ($)</label>
+              <input type="number" min="1" step="any" name="itemAmountPaid" type="text" ng-model="vm.invoice.amountPaid" id="itemAmountPaid"
+                class="form-control" placeholder="Amount Paid" ng-change="vm.processValues()" required>
+              <div ng-messages="vm.form.invoiceForm.itemAmountPaid.$error" role="alert">
+                <p class="help-block error-text" ng-message="required">Invoice amount paid is required.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </fieldset>
+
+      <fieldset>
+        <legend>Optional Information</legend>
+        <div class='row'>
+          <div class='col-sm-12'>
+            <div class="form-group">
+              <label class="control-label" for="itemNotes">Notes</label>
+              <textarea name="itemNotes" type="text" ng-model="vm.invoice.notes" id="itemNotes" class="form-control" placeholder="Notes - any relevant information not already covered"
+                ng-maxlength="100"></textarea>
+              <div ng-show="vm.form.invoiceForm.$submitted || vm.form.invoiceForm.itemNotes.$touched">
+                <span ng-show="vm.form.invoiceForm.itemNotes.$error.maxlength" class="help-block">This field has reached 100 characters limit.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class='row'>
+          <div class='col-sm-12'>
+            <div class="form-group">
+              <label class="control-label" for="itemTerms">Terms</label>
+              <textarea name="itemTerms" type="text" ng-model="vm.invoice.terms" id="itemTerms" class="form-control" placeholder="Terms and conditions - late fees, payment methods, delivery schedule"
+                ng-maxlength="100"></textarea>
+              <div ng-show="vm.form.invoiceForm.$submitted || vm.form.invoiceForm.itemTerms.$touched">
+                <span ng-show="vm.form.invoiceForm.itemTerms.$error.maxlength" class="help-block">This field has reached 100 characters limit.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+      <div class="form-group pull-right">
+        <!--<button type="submit" class="btn btn-default">{{vm.invoice._id ? 'Update' : 'Create'}}</button>-->
+        <button type="button" class="btn btn-lg btn-primary btn-default waves-effect" ng-click="vm.openModal(vm.invoice, vm.form.invoiceForm.$valid)"><i class="zmdi zmdi-eye zmdi-hc-fw"></i>Send invoice</button>
+      </div>
+      <div ng-show="vm.error" class="text-danger">
+        <strong ng-bind="vm.error"></strong>
+      </div>
+    </form>
+  </div>
+</section>

@@ -4,6 +4,7 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$stat
   function ($scope, $state, $http, $location, $window, Authentication, PasswordValidator) {
     $scope.authentication = Authentication;
     $scope.popoverMsg = PasswordValidator.getPopoverMsg();
+    $scope.names = ["admin", "user"];
 
     // Get an eventual error defined in the URL query string:
     $scope.error = $location.search().err;
@@ -27,7 +28,8 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$stat
         $scope.authentication.user = response;
 
         // And redirect to the previous or home page
-        $state.go($state.previous.state.name || 'home', $state.previous.params);
+        // $state.go($state.previous.state.name || 'home', $state.previous.params);
+        $state.go('invoices.create');
       }).error(function (response) {
         $scope.error = response.message;
       });
@@ -47,7 +49,8 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$stat
         $scope.authentication.user = response;
 
         // And redirect to the previous or home page
-        $state.go($state.previous.state.name || 'home', $state.previous.params);
+        // $state.go($state.previous.state.name || 'invoices.create', $state.previous.params);
+        $state.go('invoices.create');
       }).error(function (response) {
         $scope.error = response.message;
       });

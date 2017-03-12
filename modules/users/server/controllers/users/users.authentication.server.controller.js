@@ -24,6 +24,7 @@ exports.signup = function (req, res) {
 
   // Init Variables
   var user = new User(req.body);
+  user.roles = [req.body.role];
   var message = null;
 
   // Add missing user fields
