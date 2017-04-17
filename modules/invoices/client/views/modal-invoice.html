@@ -1,0 +1,49 @@
+<form name="form" novalidate>
+  <div class="modal-header">
+    <h4 class="modal-title">Send Invoice</h4>
+  </div>
+
+
+  <div class="modal-body">
+    <div ng-if="modal.isLoading" class='uil-ring-css' style='transform:scale(0.6); margin: 0 auto;'>
+      <div></div>
+    </div>
+
+    <div ng-if="!modal.isLoading">
+      <div class="form-group" show-errors>
+        <label class="control-label" for="senderEmail">From</label>
+        <p class="input-group">
+          <span class="input-group-addon">{{modal.invoice.senderName}}</span>
+          <input name="senderEmail" type="text" ng-model="modal.invoice.senderEmail" id="senderEmail" class="form-control" required
+            readonly>
+      </div>
+
+      <div class="form-group" show-errors>
+        <label class="control-label" for="receiverEmail">To</label>
+        <p class="input-group">
+          <span class="input-group-addon">{{modal.invoice.receiverName}}</span>
+          <input name="receiverEmail" type="text" ng-model="modal.invoice.receiverEmail" id="receiverEmail" class="form-control" required
+            readonly>
+      </div>
+
+      <div class="form-group">
+        <label class="control-label" for="receiverEmail">Subject: </label>
+        <span>{{modal.invoice.subject}}</span>
+      </div>
+
+      <div class="form-group" show-errors>
+        <label class="control-label" for="invoiceMailBody">Message</label>
+        <textarea rows="8" name="invoiceMailBody" type="text" ng-model="modal.invoice.message" id="invoiceMailBody" class="form-control"
+          required></textarea>
+        <div ng-messages="form.invoiceMailBody.$error" role="alert">
+          <p class="help-block error-text" ng-message="required">Message is required.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div ng-if="!modal.isLoading" class="modal-footer">
+    <button class="btn btn-primary" type="button" ng-click="modal.save(form.$valid)">Send</button>
+    <button class="btn btn-warning" ng-click="modal.cancel()">Cancel</button>
+  </div>
+</form>
