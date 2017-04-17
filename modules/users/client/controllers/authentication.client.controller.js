@@ -9,7 +9,8 @@
 
   function AuthenticationController($scope, $state, UsersService, $location, $window, Authentication, PasswordValidator, Notification) {
     var vm = this;
-
+    
+    vm.names = ["admin", "user"];
     vm.authentication = Authentication;
     vm.getPopoverMsg = PasswordValidator.getPopoverMsg;
     vm.signup = signup;
