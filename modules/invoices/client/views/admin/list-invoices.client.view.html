@@ -1,0 +1,26 @@
+﻿<section>
+  <div class="page-header">
+    <h1>
+      Invoices
+      <a class="btn btn-primary pull-right" data-ui-sref="admin.invoices.create">
+        <i class="glyphicon glyphicon-plus"></i>
+      </a>
+    </h1>
+  </div>
+  <div class="list-group">
+    <a data-ng-repeat="invoice in vm.invoices" data-ui-sref="admin.invoices.edit({invoiceId: invoice._id})" class="list-group-item">
+      <small class="list-group-item-text">
+        Posted on
+        <span data-ng-bind="invoice.created | date:'mediumDate'"></span>
+        by
+        <span ng-if="invoice.user" ng-bind="invoice.user.displayName"></span>
+        <span ng-if="!invoice.user">Deleted User</span>
+      </small>
+      <h4 class="list-group-item-heading" data-ng-bind="invoice.title"></h4>
+      <p class="list-group-item-text" data-ng-bind="invoice.content"></p>
+    </a>
+  </div>
+  <div class="alert alert-warning text-center" data-ng-if="invoices.$resolved && !invoices.length">
+    No invoices yet, why don't you <a data-ui-sref="admin.invoices.create">create one</a>?
+  </div>
+</section>

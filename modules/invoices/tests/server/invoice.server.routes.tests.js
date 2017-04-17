@@ -33,7 +33,7 @@ describe('Invoice CRUD tests', function () {
   beforeEach(function (done) {
     // Create user credentials
     credentials = {
-      username: 'username',
+      usernameOrEmail: 'username',
       password: 'M3@n.jsI$Aw3$0m3'
     };
 
@@ -43,22 +43,23 @@ describe('Invoice CRUD tests', function () {
       lastName: 'Name',
       displayName: 'Full Name',
       email: 'test@test.com',
-      username: credentials.username,
+      username: credentials.usernameOrEmail,
       password: credentials.password,
       provider: 'local'
     });
 
-    // Save a user to the test db and create new Invoice
+    // Save a user to the test db and create new invoice
     user.save(function () {
       invoice = {
-        name: 'Invoice name'
+        title: 'Invoice Title',
+        content: 'Invoice Content'
       };
 
       done();
     });
   });
 
-  it('should be able to save a Invoice if logged in', function (done) {
+  it('should not be able to save an invoice if logged in without the "admin" role', function (done) {
     agent.post('/api/auth/signin')
       .send(credentials)
       .expect(200)
@@ -68,42 +69,18 @@ describe('Invoice CRUD tests', function () {
           return done(signinErr);
         }
 
-        // Get the userId
-        var userId = user.id;
-
-        // Save a new Invoice
         agent.post('/api/invoices')
           .send(invoice)
-          .expect(200)
+          .expect(403)
           .end(function (invoiceSaveErr, invoiceSaveRes) {
-            // Handle Invoice save error
-            if (invoiceSaveErr) {
-              return done(invoiceSaveErr);
-            }
-
-            // Get a list of Invoices
-            agent.get('/api/invoices')
-              .end(function (invoicesGetErr, invoicesGetRes) {
-                // Handle Invoices save error
-                if (invoicesGetErr) {
-                  return done(invoicesGetErr);
-                }
-
-                // Get Invoices list
-                var invoices = invoicesGetRes.body;
-
-                // Set assertions
-                (invoices[0].user._id).should.equal(userId);
-                (invoices[0].name).should.match('Invoice name');
-
-                // Call the assertion callback
-                done();
-              });
+            // Call the assertion callback
+            done(invoiceSaveErr);
           });
+
       });
   });
 
-  it('should not be able to save an Invoice if not logged in', function (done) {
+  it('should not be able to save an invoice if not logged in', function (done) {
     agent.post('/api/invoices')
       .send(invoice)
       .expect(403)
@@ -113,10 +90,7 @@ describe('Invoice CRUD tests', function () {
       });
   });
 
-  it('should not be able to save an Invoice if no name is provided', function (done) {
-    // Invalidate name field
-    invoice.name = '';
-
+  it('should not be able to update an invoice if signed in without the "admin" role', function (done) {
     agent.post('/api/auth/signin')
       .send(credentials)
       .expect(200)
@@ -126,77 +100,23 @@ describe('Invoice CRUD tests', function () {
           return done(signinErr);
         }
 
-        // Get the userId
-        var userId = user.id;
-
-        // Save a new Invoice
         agent.post('/api/invoices')
           .send(invoice)
-          .expect(400)
+          .expect(403)
           .end(function (invoiceSaveErr, invoiceSaveRes) {
-            // Set message assertion
-            (invoiceSaveRes.body.message).should.match('Please fill Invoice name');
-
-            // Handle Invoice save error
+            // Call the assertion callback
             done(invoiceSaveErr);
           });
       });
   });
 
-  it('should be able to update an Invoice if signed in', function (done) {
-    agent.post('/api/auth/signin')
-      .send(credentials)
-      .expect(200)
-      .end(function (signinErr, signinRes) {
-        // Handle signin error
-        if (signinErr) {
-          return done(signinErr);
-        }
-
-        // Get the userId
-        var userId = user.id;
-
-        // Save a new Invoice
-        agent.post('/api/invoices')
-          .send(invoice)
-          .expect(200)
-          .end(function (invoiceSaveErr, invoiceSaveRes) {
-            // Handle Invoice save error
-            if (invoiceSaveErr) {
-              return done(invoiceSaveErr);
-            }
-
-            // Update Invoice name
-            invoice.name = 'WHY YOU GOTTA BE SO MEAN?';
-
-            // Update an existing Invoice
-            agent.put('/api/invoices/' + invoiceSaveRes.body._id)
-              .send(invoice)
-              .expect(200)
-              .end(function (invoiceUpdateErr, invoiceUpdateRes) {
-                // Handle Invoice update error
-                if (invoiceUpdateErr) {
-                  return done(invoiceUpdateErr);
-                }
-
-                // Set assertions
-                (invoiceUpdateRes.body._id).should.equal(invoiceSaveRes.body._id);
-                (invoiceUpdateRes.body.name).should.match('WHY YOU GOTTA BE SO MEAN?');
-
-                // Call the assertion callback
-                done();
-              });
-          });
-      });
-  });
-
-  it('should be able to get a list of Invoices if not signed in', function (done) {
-    // Create new Invoice model instance
+  it('should be able to get a list of invoices if not signed in', function (done) {
+    // Create new invoice model instance
     var invoiceObj = new Invoice(invoice);
 
     // Save the invoice
     invoiceObj.save(function () {
-      // Request Invoices
+      // Request invoices
       request(app).get('/api/invoices')
         .end(function (req, res) {
           // Set assertion
@@ -209,16 +129,16 @@ describe('Invoice CRUD tests', function () {
     });
   });
 
-  it('should be able to get a single Invoice if not signed in', function (done) {
-    // Create new Invoice model instance
+  it('should be able to get a single invoice if not signed in', function (done) {
+    // Create new invoice model instance
     var invoiceObj = new Invoice(invoice);
 
-    // Save the Invoice
+    // Save the invoice
     invoiceObj.save(function () {
       request(app).get('/api/invoices/' + invoiceObj._id)
         .end(function (req, res) {
           // Set assertion
-          res.body.should.be.instanceof(Object).and.have.property('name', invoice.name);
+          res.body.should.be.instanceof(Object).and.have.property('title', invoice.title);
 
           // Call the assertion callback
           done();
@@ -226,7 +146,7 @@ describe('Invoice CRUD tests', function () {
     });
   });
 
-  it('should return proper error for single Invoice with an invalid Id, if not signed in', function (done) {
+  it('should return proper error for single invoice with an invalid Id, if not signed in', function (done) {
     // test is not a valid mongoose Id
     request(app).get('/api/invoices/test')
       .end(function (req, res) {
@@ -238,19 +158,19 @@ describe('Invoice CRUD tests', function () {
       });
   });
 
-  it('should return proper error for single Invoice which doesnt exist, if not signed in', function (done) {
-    // This is a valid mongoose Id but a non-existent Invoice
+  it('should return proper error for single invoice which doesnt exist, if not signed in', function (done) {
+    // This is a valid mongoose Id but a non-existent invoice
     request(app).get('/api/invoices/559e9cd815f80b4c256a8f41')
       .end(function (req, res) {
         // Set assertion
-        res.body.should.be.instanceof(Object).and.have.property('message', 'No Invoice with that identifier has been found');
+        res.body.should.be.instanceof(Object).and.have.property('message', 'No invoice with that identifier has been found');
 
         // Call the assertion callback
         done();
       });
   });
 
-  it('should be able to delete an Invoice if signed in', function (done) {
+  it('should not be able to delete an invoice if signed in without the "admin" role', function (done) {
     agent.post('/api/auth/signin')
       .send(credentials)
       .expect(200)
@@ -260,66 +180,43 @@ describe('Invoice CRUD tests', function () {
           return done(signinErr);
         }
 
-        // Get the userId
-        var userId = user.id;
-
-        // Save a new Invoice
         agent.post('/api/invoices')
           .send(invoice)
-          .expect(200)
+          .expect(403)
           .end(function (invoiceSaveErr, invoiceSaveRes) {
-            // Handle Invoice save error
-            if (invoiceSaveErr) {
-              return done(invoiceSaveErr);
-            }
-
-            // Delete an existing Invoice
-            agent.delete('/api/invoices/' + invoiceSaveRes.body._id)
-              .send(invoice)
-              .expect(200)
-              .end(function (invoiceDeleteErr, invoiceDeleteRes) {
-                // Handle invoice error error
-                if (invoiceDeleteErr) {
-                  return done(invoiceDeleteErr);
-                }
-
-                // Set assertions
-                (invoiceDeleteRes.body._id).should.equal(invoiceSaveRes.body._id);
-
-                // Call the assertion callback
-                done();
-              });
+            // Call the assertion callback
+            done(invoiceSaveErr);
           });
       });
   });
 
-  it('should not be able to delete an Invoice if not signed in', function (done) {
-    // Set Invoice user
+  it('should not be able to delete an invoice if not signed in', function (done) {
+    // Set invoice user
     invoice.user = user;
 
-    // Create new Invoice model instance
+    // Create new invoice model instance
     var invoiceObj = new Invoice(invoice);
 
-    // Save the Invoice
+    // Save the invoice
     invoiceObj.save(function () {
-      // Try deleting Invoice
+      // Try deleting invoice
       request(app).delete('/api/invoices/' + invoiceObj._id)
         .expect(403)
         .end(function (invoiceDeleteErr, invoiceDeleteRes) {
           // Set message assertion
           (invoiceDeleteRes.body.message).should.match('User is not authorized');
 
-          // Handle Invoice error error
+          // Handle invoice error error
           done(invoiceDeleteErr);
         });
 
     });
   });
 
-  it('should be able to get a single Invoice that has an orphaned user reference', function (done) {
+  it('should be able to get a single invoice that has an orphaned user reference', function (done) {
     // Create orphan user creds
     var _creds = {
-      username: 'orphan',
+      usernameOrEmail: 'orphan',
       password: 'M3@n.jsI$Aw3$0m3'
     };
 
@@ -329,9 +226,10 @@ describe('Invoice CRUD tests', function () {
       lastName: 'Name',
       displayName: 'Full Name',
       email: 'orphan@test.com',
-      username: _creds.username,
+      username: _creds.usernameOrEmail,
       password: _creds.password,
-      provider: 'local'
+      provider: 'local',
+      roles: ['admin']
     });
 
     _orphan.save(function (err, orphan) {
@@ -352,22 +250,22 @@ describe('Invoice CRUD tests', function () {
           // Get the userId
           var orphanId = orphan._id;
 
-          // Save a new Invoice
+          // Save a new invoice
           agent.post('/api/invoices')
             .send(invoice)
             .expect(200)
             .end(function (invoiceSaveErr, invoiceSaveRes) {
-              // Handle Invoice save error
+              // Handle invoice save error
               if (invoiceSaveErr) {
                 return done(invoiceSaveErr);
               }
 
-              // Set assertions on new Invoice
-              (invoiceSaveRes.body.name).should.equal(invoice.name);
+              // Set assertions on new invoice
+              (invoiceSaveRes.body.title).should.equal(invoice.title);
               should.exist(invoiceSaveRes.body.user);
               should.equal(invoiceSaveRes.body.user._id, orphanId);
 
-              // force the Invoice to have an orphaned user reference
+              // force the invoice to have an orphaned user reference
               orphan.remove(function () {
                 // now signin with valid user
                 agent.post('/api/auth/signin')
@@ -379,18 +277,18 @@ describe('Invoice CRUD tests', function () {
                       return done(err);
                     }
 
-                    // Get the Invoice
+                    // Get the invoice
                     agent.get('/api/invoices/' + invoiceSaveRes.body._id)
                       .expect(200)
                       .end(function (invoiceInfoErr, invoiceInfoRes) {
-                        // Handle Invoice error
+                        // Handle invoice error
                         if (invoiceInfoErr) {
                           return done(invoiceInfoErr);
                         }
 
                         // Set assertions
                         (invoiceInfoRes.body._id).should.equal(invoiceSaveRes.body._id);
-                        (invoiceInfoRes.body.name).should.equal(invoice.name);
+                        (invoiceInfoRes.body.title).should.equal(invoice.title);
                         should.equal(invoiceInfoRes.body.user, undefined);
 
                         // Call the assertion callback
@@ -398,6 +296,111 @@ describe('Invoice CRUD tests', function () {
                       });
                   });
               });
+            });
+        });
+    });
+  });
+
+  it('should be able to get a single invoice if not signed in and verify the custom "isCurrentUserOwner" field is set to "false"', function (done) {
+    // Create new invoice model instance
+    var invoiceObj = new Invoice(invoice);
+
+    // Save the invoice
+    invoiceObj.save(function () {
+      request(app).get('/api/invoices/' + invoiceObj._id)
+        .end(function (req, res) {
+          // Set assertion
+          res.body.should.be.instanceof(Object).and.have.property('title', invoice.title);
+          // Assert the custom field "isCurrentUserOwner" is set to false for the un-authenticated User
+          res.body.should.be.instanceof(Object).and.have.property('isCurrentUserOwner', false);
+          // Call the assertion callback
+          done();
+        });
+    });
+  });
+
+  it('should be able to get single invoice, that a different user created, if logged in & verify the "isCurrentUserOwner" field is set to "false"', function (done) {
+    // Create temporary user creds
+    var _creds = {
+      usernameOrEmail: 'invoiceowner',
+      password: 'M3@n.jsI$Aw3$0m3'
+    };
+
+    // Create user that will create the Invoice
+    var _invoiceOwner = new User({
+      firstName: 'Full',
+      lastName: 'Name',
+      displayName: 'Full Name',
+      email: 'temp@test.com',
+      username: _creds.usernameOrEmail,
+      password: _creds.password,
+      provider: 'local',
+      roles: ['admin', 'user']
+    });
+
+    _invoiceOwner.save(function (err, _user) {
+      // Handle save error
+      if (err) {
+        return done(err);
+      }
+
+      // Sign in with the user that will create the Invoice
+      agent.post('/api/auth/signin')
+        .send(_creds)
+        .expect(200)
+        .end(function (signinErr, signinRes) {
+          // Handle signin error
+          if (signinErr) {
+            return done(signinErr);
+          }
+
+          // Get the userId
+          var userId = _user._id;
+
+          // Save a new invoice
+          agent.post('/api/invoices')
+            .send(invoice)
+            .expect(200)
+            .end(function (invoiceSaveErr, invoiceSaveRes) {
+              // Handle invoice save error
+              if (invoiceSaveErr) {
+                return done(invoiceSaveErr);
+              }
+
+              // Set assertions on new invoice
+              (invoiceSaveRes.body.title).should.equal(invoice.title);
+              should.exist(invoiceSaveRes.body.user);
+              should.equal(invoiceSaveRes.body.user._id, userId);
+
+              // now signin with the test suite user
+              agent.post('/api/auth/signin')
+                .send(credentials)
+                .expect(200)
+                .end(function (err, res) {
+                  // Handle signin error
+                  if (err) {
+                    return done(err);
+                  }
+
+                  // Get the invoice
+                  agent.get('/api/invoices/' + invoiceSaveRes.body._id)
+                    .expect(200)
+                    .end(function (invoiceInfoErr, invoiceInfoRes) {
+                      // Handle invoice error
+                      if (invoiceInfoErr) {
+                        return done(invoiceInfoErr);
+                      }
+
+                      // Set assertions
+                      (invoiceInfoRes.body._id).should.equal(invoiceSaveRes.body._id);
+                      (invoiceInfoRes.body.title).should.equal(invoice.title);
+                      // Assert that the custom field "isCurrentUserOwner" is set to false since the current User didn't create it
+                      (invoiceInfoRes.body.isCurrentUserOwner).should.equal(false);
+
+                      // Call the assertion callback
+                      done();
+                    });
+                });
             });
         });
     });

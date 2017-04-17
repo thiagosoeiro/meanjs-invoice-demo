@@ -38,6 +38,25 @@
         });
       });
 
+      describe('List Route', function () {
+        var liststate;
+        beforeEach(inject(function ($state) {
+          liststate = $state.get('invoices.list');
+        }));
+
+        it('Should have the correct URL', function () {
+          expect(liststate.url).toEqual('');
+        });
+
+        it('Should not be abstract', function () {
+          expect(liststate.abstract).toBe(undefined);
+        });
+
+        it('Should have templateUrl', function () {
+          expect(liststate.templateUrl).toBe('/modules/invoices/client/views/list-invoices.client.view.html');
+        });
+      });
+
       describe('View Route', function () {
         var viewstate,
           InvoicesController,
@@ -45,12 +64,13 @@
 
         beforeEach(inject(function ($controller, $state, $templateCache) {
           viewstate = $state.get('invoices.view');
-          $templateCache.put('modules/invoices/client/views/view-invoice.client.view.html', '');
+          $templateCache.put('/modules/invoices/client/views/view-invoice.client.view.html', '');
 
-          // create mock Invoice
+          // create mock invoice
           mockInvoice = new InvoicesService({
             _id: '525a8422f6d0f87f0e407a33',
-            name: 'Invoice Name'
+            title: 'An Invoice about MEAN',
+            content: 'MEAN rocks!'
           });
 
           // Initialize Controller
@@ -75,7 +95,7 @@
           })).toEqual('/invoices/1');
         }));
 
-        it('should attach an Invoice to the controller scope', function () {
+        it('should attach an invoice to the controller scope', function () {
           expect($scope.vm.invoice._id).toBe(mockInvoice._id);
         });
 
@@ -84,110 +104,26 @@
         });
 
         it('Should have templateUrl', function () {
-          expect(viewstate.templateUrl).toBe('modules/invoices/client/views/view-invoice.client.view.html');
+          expect(viewstate.templateUrl).toBe('/modules/invoices/client/views/view-invoice.client.view.html');
         });
       });
 
-      describe('Create Route', function () {
-        var createstate,
-          InvoicesController,
-          mockInvoice;
+      describe('Handle Trailing Slash', function () {
+        beforeEach(inject(function ($state, $rootScope, $templateCache) {
+          $templateCache.put('/modules/invoices/client/views/list-invoices.client.view.html', '');
 
-        beforeEach(inject(function ($controller, $state, $templateCache) {
-          createstate = $state.get('invoices.create');
-          $templateCache.put('modules/invoices/client/views/form-invoice.client.view.html', '');
-
-          // create mock Invoice
-          mockInvoice = new InvoicesService();
-
-          // Initialize Controller
-          InvoicesController = $controller('InvoicesController as vm', {
-            $scope: $scope,
-            invoiceResolve: mockInvoice
-          });
+          $state.go('invoices.list');
+          $rootScope.$digest();
         }));
 
-        it('Should have the correct URL', function () {
-          expect(createstate.url).toEqual('/create');
-        });
+        it('Should remove trailing slash', inject(function ($state, $location, $rootScope) {
+          $location.path('invoices/');
+          $rootScope.$digest();
 
-        it('Should have a resolve function', function () {
-          expect(typeof createstate.resolve).toEqual('object');
-          expect(typeof createstate.resolve.invoiceResolve).toEqual('function');
-        });
-
-        it('should respond to URL', inject(function ($state) {
-          expect($state.href(createstate)).toEqual('/invoices/create');
+          expect($location.path()).toBe('/invoices');
+          expect($state.current.templateUrl).toBe('/modules/invoices/client/views/list-invoices.client.view.html');
         }));
-
-        it('should attach an Invoice to the controller scope', function () {
-          expect($scope.vm.invoice._id).toBe(mockInvoice._id);
-          expect($scope.vm.invoice._id).toBe(undefined);
-        });
-
-        it('Should not be abstract', function () {
-          expect(createstate.abstract).toBe(undefined);
-        });
-
-        it('Should have templateUrl', function () {
-          expect(createstate.templateUrl).toBe('modules/invoices/client/views/form-invoice.client.view.html');
-        });
       });
-
-      describe('Edit Route', function () {
-        var editstate,
-          InvoicesController,
-          mockInvoice;
-
-        beforeEach(inject(function ($controller, $state, $templateCache) {
-          editstate = $state.get('invoices.edit');
-          $templateCache.put('modules/invoices/client/views/form-invoice.client.view.html', '');
-
-          // create mock Invoice
-          mockInvoice = new InvoicesService({
-            _id: '525a8422f6d0f87f0e407a33',
-            name: 'Invoice Name'
-          });
-
-          // Initialize Controller
-          InvoicesController = $controller('InvoicesController as vm', {
-            $scope: $scope,
-            invoiceResolve: mockInvoice
-          });
-        }));
-
-        it('Should have the correct URL', function () {
-          expect(editstate.url).toEqual('/:invoiceId/edit');
-        });
-
-        it('Should have a resolve function', function () {
-          expect(typeof editstate.resolve).toEqual('object');
-          expect(typeof editstate.resolve.invoiceResolve).toEqual('function');
-        });
-
-        it('should respond to URL', inject(function ($state) {
-          expect($state.href(editstate, {
-            invoiceId: 1
-          })).toEqual('/invoices/1/edit');
-        }));
-
-        it('should attach an Invoice to the controller scope', function () {
-          expect($scope.vm.invoice._id).toBe(mockInvoice._id);
-        });
-
-        it('Should not be abstract', function () {
-          expect(editstate.abstract).toBe(undefined);
-        });
-
-        it('Should have templateUrl', function () {
-          expect(editstate.templateUrl).toBe('modules/invoices/client/views/form-invoice.client.view.html');
-        });
-
-        xit('Should go to unauthorized route', function () {
-
-        });
-      });
-
     });
   });
 }());
