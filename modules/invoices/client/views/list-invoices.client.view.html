@@ -11,8 +11,7 @@
         <span ng-if="invoice.user" ng-bind="invoice.user.displayName"></span>
         <span ng-if="!invoice.user">Deleted User</span>
       </small>
-      <h4 class="list-group-item-heading" ng-bind="invoice.title"></h4>
-      <p class="list-group-item-text" ng-bind="invoice.content"></p>
+      <h4 class="list-group-item-heading"><span>{{invoice.title}} - #{{invoice.number}}</span></h4>      
     </a>
   </div>
 </section>
