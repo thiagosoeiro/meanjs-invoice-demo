@@ -33,6 +33,13 @@ describe('Invoice Model Unit Tests:', function () {
       invoice = new Invoice({
         title: 'Invoice Title',
         content: 'Invoice Content',
+        number: 'invoice number',
+        senderName: 'Sender name',
+        senderEmail: 'sender@sender.com',
+        receiverName: 'receiver name',
+        receiverEmail: 'receiver@receiver.com',
+        paymentTerms: 'payment terms',
+        amountPaid: 10,
         user: user
       });
 

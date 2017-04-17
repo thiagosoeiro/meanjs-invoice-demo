@@ -6,7 +6,12 @@
 var path = require('path'),
   mongoose = require('mongoose'),
   Invoice = mongoose.model('Invoice'),
-  errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
+  errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
+
+  nodemailer = require('nodemailer'),
+  config = require(path.resolve('./config/config'));
+
+var transporter = nodemailer.createTransport(config.mailer.options);
 
 /**
  * Create an invoice
@@ -21,7 +26,24 @@ exports.create = function (req, res) {
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      res.json(invoice);
+      //send mail
+      var mailOptions = {
+        to: invoice.receiverEmail,
+        from: invoice.senderEmail,
+        subject: req.body.subject,
+        text: req.body.message,
+        html: req.body.message
+      };
+      transporter.sendMail(mailOptions, function (err) {
+        if (err) {
+          return res.status(400).send({
+            message: 'Failure sending email'
+          });
+        } else {
+          res.json(invoice);
+        }
+      });
+      //res.json(invoice);
     }
   });
 };

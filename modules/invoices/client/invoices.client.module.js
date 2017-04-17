@@ -5,5 +5,6 @@
   app.registerModule('invoices.admin', ['core.admin']);
   app.registerModule('invoices.admin.routes', ['core.admin.routes']);
   app.registerModule('invoices.services');
+  app.registerModule('invoices.constants');
   app.registerModule('invoices.routes', ['ui.router', 'core.routes', 'invoices.services']);
 }(ApplicationConfiguration));
