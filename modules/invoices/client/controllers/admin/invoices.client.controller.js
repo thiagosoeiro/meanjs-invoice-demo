@@ -85,10 +85,14 @@
 
     };
 
+    function add(a, b) {
+      return a + b;
+    }
+
     vm.processValues = function () {
       if (vm.invoice.items.length) {
         var array = vm.invoice.items.map(function (a) { return a.amount; });
-        var sum = array.reduce((a, b) => a + b, 0);
+        var sum = array.reduce(add, 0);//Freduce((a, b) => a + b, 0);
         vm.invoice.total = sum;
         vm.invoice.balanceDue = vm.invoice.total -
           (vm.invoice.amountPaid === undefined ? 0
@@ -100,6 +104,7 @@
         (vm.invoice.amountPaid === undefined ? 0
           : vm.invoice.amountPaid);
     }
+
 
     vm.addNewItem = function (item) {
       if (isItemValid(item)) {
