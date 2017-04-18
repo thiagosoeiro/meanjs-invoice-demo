@@ -1,16 +1,15 @@
 'use strict';
 
 /**
- * Module dependencies.
+ * Module dependencies
  */
 var mongoose = require('mongoose'),
   Schema = mongoose.Schema,
   validator = require('validator');
 
-
 /**
- * A Validation function for email
- */
+* A Validation function for email
+*/
 var validateEmail = function (email) {
   return (validator.isEmail(email));
 };
@@ -23,6 +22,11 @@ var InvoiceSchema = new Schema({
     type: String,
     default: '',
     required: 'Please fill Invoice title',
+    trim: true
+  },
+  content: {
+    type: String,
+    default: '',
     trim: true
   },
   number: {
@@ -133,6 +137,7 @@ var InvoiceSchema = new Schema({
     type: Schema.ObjectId,
     ref: 'User'
   }
+
 });
 
 mongoose.model('Invoice', InvoiceSchema);

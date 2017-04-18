@@ -25,7 +25,7 @@ exports.invokeRolesPolicies = function () {
     roles: ['user'],
     allows: [{
       resources: '/api/invoices',
-      permissions: ['get', 'post']
+      permissions: ['get']
     }, {
       resources: '/api/invoices/:invoiceId',
       permissions: ['get']
@@ -48,7 +48,7 @@ exports.invokeRolesPolicies = function () {
 exports.isAllowed = function (req, res, next) {
   var roles = (req.user) ? req.user.roles : ['guest'];
 
-  // If an Invoice is being processed and the current user created it then allow any manipulation
+  // If an invoice is being processed and the current user created it then allow any manipulation
   if (req.invoice && req.user && req.invoice.user && req.invoice.user.id === req.user.id) {
     return next();
   }

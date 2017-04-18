@@ -2,7 +2,7 @@
   'use strict';
 
   angular
-    .module('invoices')
+    .module('invoices.routes')
     .config(routeConfig);
 
   routeConfig.$inject = ['$stateProvider'];
@@ -16,49 +16,23 @@
       })
       .state('invoices.list', {
         url: '',
-        templateUrl: 'modules/invoices/client/views/list-invoices.client.view.html',
+        templateUrl: '/modules/invoices/client/views/list-invoices.client.view.html',
         controller: 'InvoicesListController',
         controllerAs: 'vm',
         data: {
           pageTitle: 'Invoices List'
         }
       })
-      .state('invoices.create', {
-        url: '/create',
-        templateUrl: 'modules/invoices/client/views/form-invoice.client.view.html',
-        controller: 'InvoicesController',
-        controllerAs: 'vm',
-        resolve: {
-          invoiceResolve: newInvoice
-        },
-        data: {
-          roles: ['user', 'admin'],
-          pageTitle: 'Invoices Create'
-        }
-      })
-      .state('invoices.edit', {
-        url: '/:invoiceId/edit',
-        templateUrl: 'modules/invoices/client/views/form-invoice.client.view.html',
-        controller: 'InvoicesController',
-        controllerAs: 'vm',
-        resolve: {
-          invoiceResolve: getInvoice
-        },
-        data: {
-          roles: ['user', 'admin'],
-          pageTitle: 'Edit Invoice {{ invoiceResolve.name }}'
-        }
-      })
       .state('invoices.view', {
         url: '/:invoiceId',
-        templateUrl: 'modules/invoices/client/views/view-invoice.client.view.html',
+        templateUrl: '/modules/invoices/client/views/view-invoice.client.view.html',
         controller: 'InvoicesController',
         controllerAs: 'vm',
         resolve: {
           invoiceResolve: getInvoice
         },
         data: {
-          pageTitle: 'Invoice {{ invoiceResolve.name }}'
+          pageTitle: 'Invoice {{ invoiceResolve.title }}'
         }
       });
   }
@@ -69,11 +43,5 @@
     return InvoicesService.get({
       invoiceId: $stateParams.invoiceId
     }).$promise;
-  }
-
-  newInvoice.$inject = ['InvoicesService'];
-
-  function newInvoice(InvoicesService) {
-    return new InvoicesService();
   }
 }());

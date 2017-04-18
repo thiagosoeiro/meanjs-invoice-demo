@@ -46,10 +46,11 @@
       Authentication = _Authentication_;
       InvoicesService = _InvoicesService_;
 
-      // create mock article
+      // create mock invoice
       mockInvoice = new InvoicesService({
         _id: '525a8422f6d0f87f0e407a33',
-        name: 'Invoice Name'
+        title: 'An Invoice about MEAN',
+        content: 'MEAN rocks!'
       });
 
       // Mock logged in user
@@ -73,10 +74,12 @@
         mockInvoiceList = [mockInvoice, mockInvoice];
       });
 
-      it('should send a GET request and return all Invoices', inject(function (InvoicesService) {
+      it('should send a GET request and return all invoices', inject(function (InvoicesService) {
         // Set POST response
-        $httpBackend.expectGET('api/invoices').respond(mockInvoiceList);
+        $httpBackend.expectGET('/api/invoices').respond(mockInvoiceList);
 
+        // Ignore parent template get on state transition
+        $httpBackend.whenGET('/modules/core/client/views/home.client.view.html').respond(200, '');
 
         $httpBackend.flush();
 
