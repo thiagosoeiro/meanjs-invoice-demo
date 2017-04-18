@@ -143,7 +143,7 @@
             <div class="form-group" show-errors>
               <label class="control-label" for="dateField">Date</label>
               <p class="input-group">
-                <input type="text" name="dateField" id="dateField" class="form-control" datepicker-popup="{{vm.format}}" ng-model="vm.invoice.invoiceDate"
+                <input type="text" name="dateField" id="dateField" class="form-control" uib-datepicker-popup="{{vm.format}}" ng-model="vm.invoice.invoiceDate"
                   is-open="vm.status.opened" min-date="vm.minDate" max-date="vm.maxDate" datepicker-options="vm.dateOptions"
                   date-disabled="vm.disabled(date, mode)" required close-text="Close" />
                 <span class="input-group-btn">
@@ -160,7 +160,7 @@
             <div class="form-group" show-errors>
               <label class="control-label" for="dueDateField">Due Date</label>
               <p class="input-group">
-                <input type="text" name="dueDateField" id="dueDateField" class="form-control" datepicker-popup="{{vm.format}}" ng-model="vm.invoice.invoiceDueDate"
+                <input type="text" name="dueDateField" id="dueDateField" class="form-control" uib-datepicker-popup="{{vm.format}}" ng-model="vm.invoice.invoiceDueDate"
                   is-open="vm.status.opened2" min-date="vm.minDate" max-date="vm.maxDate" datepicker-options="vm.dateOptions"
                   date-disabled="vm.disabled(date, mode)" required close-text="Close" />
                 <span class="input-group-btn">
