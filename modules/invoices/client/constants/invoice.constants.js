@@ -27,7 +27,7 @@
     };
 
     angular
-        .module('invoices')
+        .module('invoices.constants')
         .constant('INVOICE_CONSTANTS', INVOICE_CONSTANTS);
 
 })();

@@ -1,20 +1,20 @@
 'use strict';
 
 /**
- * Module dependencies.
+ * Module dependencies
  */
 var path = require('path'),
-  nodemailer = require('nodemailer'),
-  config = require(path.resolve('./config/config')),
   mongoose = require('mongoose'),
   Invoice = mongoose.model('Invoice'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
-  _ = require('lodash');
+
+  nodemailer = require('nodemailer'),
+  config = require(path.resolve('./config/config'));
 
 var transporter = nodemailer.createTransport(config.mailer.options);
 
 /**
- * Create a Invoice
+ * Create an invoice
  */
 exports.create = function (req, res) {
   var invoice = new Invoice(req.body);
@@ -22,7 +22,7 @@ exports.create = function (req, res) {
 
   invoice.save(function (err) {
     if (err) {
-      return res.status(400).send({
+      return res.status(422).send({
         message: errorHandler.getErrorMessage(err)
       });
     } else {
@@ -40,59 +40,61 @@ exports.create = function (req, res) {
             message: 'Failure sending email'
           });
         } else {
-          res.jsonp(invoice);
+          res.json(invoice);
         }
       });
+      //res.json(invoice);
     }
   });
 };
 
 /**
- * Show the current Invoice
+ * Show the current invoice
  */
 exports.read = function (req, res) {
   // convert mongoose document to JSON
   var invoice = req.invoice ? req.invoice.toJSON() : {};
 
-  // Add a custom field to the Article, for determining if the current User is the "owner".
-  // NOTE: This field is NOT persisted to the database, since it doesn't exist in the Article model.
-  invoice.isCurrentUserOwner = req.user && invoice.user && invoice.user._id.toString() === req.user._id.toString();
+  // Add a custom field to the Invoice, for determining if the current User is the "owner".
+  // NOTE: This field is NOT persisted to the database, since it doesn't exist in the Invoice model.
+  invoice.isCurrentUserOwner = !!(req.user && invoice.user && invoice.user._id.toString() === req.user._id.toString());
 
-  res.jsonp(invoice);
+  res.json(invoice);
 };
 
 /**
- * Update a Invoice
+ * Update an invoice
  */
 exports.update = function (req, res) {
   var invoice = req.invoice;
 
-  invoice = _.extend(invoice, req.body);
+  invoice.title = req.body.title;
+  invoice.content = req.body.content;
 
   invoice.save(function (err) {
     if (err) {
-      return res.status(400).send({
+      return res.status(422).send({
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      res.jsonp(invoice);
+      res.json(invoice);
     }
   });
 };
 
 /**
- * Delete an Invoice
+ * Delete an invoice
  */
 exports.delete = function (req, res) {
   var invoice = req.invoice;
 
   invoice.remove(function (err) {
     if (err) {
-      return res.status(400).send({
+      return res.status(422).send({
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      res.jsonp(invoice);
+      res.json(invoice);
     }
   });
 };
@@ -103,11 +105,11 @@ exports.delete = function (req, res) {
 exports.list = function (req, res) {
   Invoice.find().sort('-created').populate('user', 'displayName').exec(function (err, invoices) {
     if (err) {
-      return res.status(400).send({
+      return res.status(422).send({
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      res.jsonp(invoices);
+      res.json(invoices);
     }
   });
 };
@@ -128,7 +130,7 @@ exports.invoiceByID = function (req, res, next, id) {
       return next(err);
     } else if (!invoice) {
       return res.status(404).send({
-        message: 'No Invoice with that identifier has been found'
+        message: 'No invoice with that identifier has been found'
       });
     }
     req.invoice = invoice;
