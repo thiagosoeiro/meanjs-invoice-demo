@@ -97,7 +97,7 @@
         $httpBackend.flush();
 
         // Test Notification success was called
-        expect(Notification.success).toHaveBeenCalledWith({ message: '<i class="glyphicon glyphicon-ok"></i> Invoice saved successfully!' });
+        expect(Notification.success).toHaveBeenCalledWith({ message: '<i class="glyphicon glyphicon-ok"></i> Draft saved successfully!' });
         // Test URL redirection after the invoice was created
         expect($state.go).toHaveBeenCalledWith('admin.invoices.list');
       }));
