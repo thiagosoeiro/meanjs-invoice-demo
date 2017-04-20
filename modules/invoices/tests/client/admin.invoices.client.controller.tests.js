@@ -102,8 +102,51 @@
         expect($state.go).toHaveBeenCalledWith('admin.invoices.list');
       }));
 
+      it('should call Notification.error if error', function () {
+        var errorMessage = 'this is an error message';
+        $httpBackend.expectPOST('/api/invoices', sampleInvoicePostData).respond(400, {
+          message: errorMessage
+        });
+
+        $scope.vm.save(true);
+        $httpBackend.flush();
+
+        expect(Notification.error).toHaveBeenCalledWith({ message: errorMessage, title: '<i class="glyphicon glyphicon-remove"></i> Invoice save error!' });
+      });
     });
 
+    describe('vm.save() as update', function () {
+      beforeEach(function () {
+        // Mock invoice in $scope
+        $scope.vm.invoice = mockInvoice;
+      });
+
+      it('should update a valid invoice', inject(function (InvoicesService) {
+        // Set PUT response
+        $httpBackend.expectPUT(/api\/invoices\/([0-9a-fA-F]{24})$/).respond();
+
+        // Run controller functionality
+        $scope.vm.save(true);
+        $httpBackend.flush();
+
+        // Test Notification success was called
+        expect(Notification.success).toHaveBeenCalledWith({ message: '<i class="glyphicon glyphicon-ok"></i> Invoice saved successfully!' });
+        // Test URL location to new object
+        expect($state.go).toHaveBeenCalledWith('admin.invoices.list');
+      }));
+
+      it('should  call Notification.error if error', inject(function (InvoicesService) {
+        var errorMessage = 'error';
+        $httpBackend.expectPUT(/api\/invoices\/([0-9a-fA-F]{24})$/).respond(400, {
+          message: errorMessage
+        });
+
+        $scope.vm.save(true);
+        $httpBackend.flush();
+
+        expect(Notification.error).toHaveBeenCalledWith({ message: errorMessage, title: '<i class="glyphicon glyphicon-remove"></i> Invoice save error!' });
+      }));
+    });
 
     describe('vm.remove()', function () {
       beforeEach(function () {

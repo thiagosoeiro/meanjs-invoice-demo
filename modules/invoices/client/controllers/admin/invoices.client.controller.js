@@ -17,7 +17,7 @@
     vm.authentication = Authentication;
     vm.form = {};
     vm.remove = remove;
-    vm.saveDraft = saveDraft; //not in use here
+    vm.save = save; //not in use here
 
     vm.newItem = {};
 
@@ -32,7 +32,7 @@
     }
 
     // Save Invoice
-    function saveDraft() {
+    function save() {
       // if (!isValid) {
       //   $scope.$broadcast('show-errors-check-validity', 'vm.form.invoiceForm');
       //   return false;
