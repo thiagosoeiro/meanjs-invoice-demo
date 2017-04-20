@@ -26,24 +26,27 @@ exports.create = function (req, res) {
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      //send mail
-      var mailOptions = {
-        to: invoice.receiverEmail,
-        from: invoice.senderEmail,
-        subject: req.body.subject,
-        text: req.body.message,
-        html: req.body.message
-      };
-      transporter.sendMail(mailOptions, function (err) {
-        if (err) {
-          return res.status(400).send({
-            message: 'Failure sending email'
-          });
-        } else {
-          res.json(invoice);
-        }
-      });
-      //res.json(invoice);
+      if (!invoice.isEditable) {
+        //send mail
+        var mailOptions = {
+          to: invoice.receiverEmail,
+          from: invoice.senderEmail,
+          subject: req.body.subject,
+          text: req.body.message,
+          html: req.body.message
+        };
+        transporter.sendMail(mailOptions, function (err) {
+          if (err) {
+            return res.status(400).send({
+              message: 'Failure sending email'
+            });
+          } else {
+            res.json(invoice);
+          }
+        });
+      } else {
+        res.json(invoice);
+      }
     }
   });
 };
@@ -66,10 +69,29 @@ exports.read = function (req, res) {
  * Update an invoice
  */
 exports.update = function (req, res) {
-  var invoice = req.invoice;
 
+  var invoice = req.invoice;
   invoice.title = req.body.title;
   invoice.content = req.body.content;
+  invoice.number = req.body.number;
+  invoice.senderName = req.body.senderName;
+  invoice.senderEmail = req.body.senderEmail;
+  invoice.receiverName = req.body.receiverName;
+  invoice.receiverEmail = req.body.receiverEmail;
+  invoice.invoiceDate = req.body.invoiceDate;
+  invoice.invoiceDueDate = req.body.invoiceDueDate;
+  invoice.paymentTerms = req.body.paymentTerms;
+  invoice.balanceDue = req.body.balanceDue;
+  invoice.items = req.body.items;
+  invoice.quantity = req.body.quantity;
+  invoice.rate = req.body.rate;
+  invoice.amount = req.body.amount;
+  invoice.total = req.body.total;
+  invoice.amountPaid = req.body.amountPaid;
+  invoice.notes = req.body.notes;
+  invoice.terms = req.body.terms;
+  invoice.isEditable = req.body.isEditable;
+
 
   invoice.save(function (err) {
     if (err) {
@@ -77,9 +99,32 @@ exports.update = function (req, res) {
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      res.json(invoice);
+      if (!invoice.isEditable) {
+        //send mail
+        var mailOptions = {
+          to: invoice.receiverEmail,
+          from: invoice.senderEmail,
+          subject: req.body.subject,
+          text: req.body.message,
+          html: req.body.message
+        };
+        transporter.sendMail(mailOptions, function (err) {
+          if (err) {
+            return res.status(400).send({
+              message: 'Failure sending email'
+            });
+          } else {
+            res.json(invoice);
+          }
+        });
+      } else {
+        res.json(invoice);
+      }
     }
   });
+
+
+
 };
 
 /**

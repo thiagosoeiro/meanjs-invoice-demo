@@ -11,7 +11,10 @@ var mongoose = require('mongoose'),
 * A Validation function for email
 */
 var validateEmail = function (email) {
-  return (validator.isEmail(email));
+  if (email) {
+    return (validator.isEmail(email));
+  }
+  return true;
 };
 
 /**
@@ -21,7 +24,11 @@ var InvoiceSchema = new Schema({
   title: {
     type: String,
     default: '',
-    required: 'Please fill Invoice title',
+    required: [
+      function () {
+        return !this.isEditable;
+      },
+      'Please fill Invoice title'],
     trim: true
   },
   content: {
@@ -32,18 +39,30 @@ var InvoiceSchema = new Schema({
   number: {
     type: String,
     default: '',
-    required: 'Please fill Invoice number',
+    required: [
+      function () {
+        return !this.isEditable;
+      },
+      'Please fill Invoice number'],
     trim: true
   },
   senderName: {
     type: String,
     default: '',
-    required: 'Please fill Invoice sender name',
+    required: [
+      function () {
+        return !this.isEditable;
+      },
+      'Please fill Invoice sender name'],
     trim: true
   },
   senderEmail: {
     type: String,
-    required: 'Please fill Invoice sender email',
+    required: [
+      function () {
+        return !this.isEditable;
+      },
+      'Please fill Invoice sender email'],
     lowercase: true,
     trim: true,
     default: '',
@@ -52,13 +71,21 @@ var InvoiceSchema = new Schema({
   receiverName: {
     type: String,
     default: '',
-    required: 'Please fill Invoice receiver name',
+    required: [
+      function () {
+        return !this.isEditable;
+      },
+      'Please fill Invoice receiver name'],
     trim: true
   },
   receiverEmail: {
     type: String,
     default: '',
-    required: 'Please fill Invoice receiver email',
+    required: [
+      function () {
+        return !this.isEditable;
+      },
+      'Please fill Invoice receiver email'],
     lowercase: true,
     trim: true,
     validate: [validateEmail, 'Please fill a valid email address']
@@ -74,7 +101,11 @@ var InvoiceSchema = new Schema({
   paymentTerms: {
     type: String,
     default: '',
-    required: 'Please fill Invoice payment terms',
+    required: [
+      function () {
+        return !this.isEditable;
+      },
+      'Please fill Invoice payment terms'],
     trim: true
   },
   balanceDue: {
@@ -86,25 +117,41 @@ var InvoiceSchema = new Schema({
     description: {
       type: String,
       default: '',
-      required: 'Please fill description field',
+      required: [
+        function () {
+          return !this.isEditable;
+        },
+        'Please fill description field'],
       trim: true
     },
     quantity: {
       type: Number,
       default: '',
-      required: 'Please fill quantity field',
+      required: [
+        function () {
+          return !this.isEditable;
+        },
+        'Please fill quantity field'],
       trim: true
     },
     rate: {
       type: Number,
       default: '',
-      required: 'Please fill rate field',
+      required: [
+        function () {
+          return !this.isEditable;
+        },
+        'Please fill rate field'],
       trim: true
     },
     amount: {
       type: Number,
       default: '',
-      required: 'Please fill amount field',
+      required: [
+        function () {
+          return !this.isEditable;
+        },
+        'Please fill amount field'],
       trim: true
     }
   }],
@@ -116,7 +163,11 @@ var InvoiceSchema = new Schema({
   amountPaid: {
     type: Number,
     default: '',
-    required: 'Please fill Invoice amount paid',
+    required: [
+      function () {
+        return !this.isEditable;
+      },
+      'Please fill Invoice amount paid'],
     trim: true
   },
   notes: {
@@ -136,7 +187,11 @@ var InvoiceSchema = new Schema({
   user: {
     type: Schema.ObjectId,
     ref: 'User'
-  }
+  },
+  isEditable: {
+    type: Boolean,
+    default: false
+  },
 
 });
 
