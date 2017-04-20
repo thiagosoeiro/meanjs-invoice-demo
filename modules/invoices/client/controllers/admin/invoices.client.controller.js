@@ -17,15 +17,15 @@
     vm.authentication = Authentication;
     vm.form = {};
     vm.remove = remove;
-    vm.save = save; //not in use here
+    vm.save = save; //save draft
 
     vm.newItem = {};
 
     // Remove existing Invoice - not in use
     function remove() {
-      if ($window.confirm('Are you sure you want to delete?')) {
+      if ($window.confirm('Are you sure you want to delete this draft?')) {
         vm.invoice.$remove(function () {
-          $state.go('admin.invoices.list');
+          $state.go('admin.drafts.list');
           Notification.success({ message: '<i class="glyphicon glyphicon-ok"></i> Invoice deleted successfully!' });
         });
       }
@@ -166,10 +166,7 @@
       Notification.success({ message: '<i class="glyphicon glyphicon-ok"></i> Thank you for invoicing with us! Your invoice has been sent!' });
     }
 
-
-
-
-
+    
 
 
 

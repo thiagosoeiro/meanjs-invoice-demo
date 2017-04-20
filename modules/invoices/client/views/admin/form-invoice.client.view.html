@@ -51,13 +51,18 @@
 
   <div class="page-header">
     <div class='row'>
-      <div class='col-sm-4 pull-right'>
+      <div class='col-sm-4'>
         <div class="form-group">
           <input name="invoiceTitle" type="text" ng-model="vm.invoice.title" id="invoiceTitle" class="form-control input-lg" required>
           <div ng-messages="vm.form.invoiceForm.invoiceTitle.$error" role="alert">
             <p class="help-block error-text" ng-message="required">Invoice title is required.</p>
           </div>
         </div>
+      </div>
+      <div class="col-md-4 pull-right">
+        <a class="btn btn-danger pull-right" ng-click="vm.remove()" ng-show="vm.invoice._id">
+          <i class="glyphicon glyphicon-trash"></i>
+        </a>
       </div>
     </div>
   </div>

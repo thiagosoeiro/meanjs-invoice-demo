@@ -164,7 +164,7 @@
         $httpBackend.flush();
 
         expect(Notification.success).toHaveBeenCalledWith({ message: '<i class="glyphicon glyphicon-ok"></i> Invoice deleted successfully!' });
-        expect($state.go).toHaveBeenCalledWith('admin.invoices.list');
+        expect($state.go).toHaveBeenCalledWith('admin.drafts.list');
       });
 
       it('should should not delete the invoice and not redirect', function () {
