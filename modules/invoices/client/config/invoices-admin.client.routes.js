@@ -46,7 +46,25 @@
         resolve: {
           invoiceResolve: getInvoice
         }
-      });
+      })
+      .state('admin.drafts', {
+        abstract: true,
+        url: '/drafts',
+        template: '<ui-view/>'
+      })
+      .state('admin.drafts.list', {
+        url: '',
+        templateUrl: '/modules/invoices/client/views/admin/list-drafts.client.view.html',
+        controller: 'InvoicesAdminListController',
+        controllerAs: 'vm',
+        data: {
+          roles: ['admin']
+        }
+      })
+      
+      
+      
+      ;
   }
 
   getInvoice.$inject = ['$stateParams', 'InvoicesService'];

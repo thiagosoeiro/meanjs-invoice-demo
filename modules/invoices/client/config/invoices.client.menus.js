@@ -17,7 +17,7 @@
 
     // Add the dropdown list item
     menuService.addSubMenuItem('topbar', 'invoices', {
-      title: 'List Invoices',
+      title: 'List Sent Invoices',
       state: 'invoices.list',
       roles: ['*']
     });

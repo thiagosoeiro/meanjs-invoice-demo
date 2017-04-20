@@ -39,9 +39,9 @@
                 {{ item.quantity }}
               </td>
               <td>
-                {{ item.rate }}
+                {{ item.rate | currency }}
               </td>
-              <td>{{item.amount}}</td>
+              <td>{{item.amount | currency}}</td>
             </tr>
           </tbody>
         </table>
