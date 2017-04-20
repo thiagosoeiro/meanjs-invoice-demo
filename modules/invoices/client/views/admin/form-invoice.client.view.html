@@ -177,7 +177,7 @@
 
         <div class='row'>
           <div class='col-sm-4 pull-right text-right'>
-            <h4 ng-if="vm.invoice.balanceDue"><span>Balance Due: ${{vm.invoice.balanceDue}}</span></h4>
+            <h4 ng-if="vm.invoice.balanceDue"><span>Balance Due: {{vm.invoice.balanceDue | currency}}</span></h4>
             <h4 ng-if="!vm.invoice.balanceDue"><span>Balance Due: $0</span></h4>
           </div>
         </div>
@@ -257,14 +257,14 @@
                     </td>
 
                     <td>
-                      <span ng-if="!item.$edit">{{ item.rate }}</span>
+                      <span ng-if="!item.$edit">{{ item.rate | currency }}</span>
                       <div ng-if="item.$edit">
                         <input type="number" min="1" step="any" class="form-control" ng-model="item.rate" name="itemRateArray{{$index}}" id="itemRateArray{{$index}}"
                           ng-change="vm.calculateItemAmount(item)" />
                       </div>
                     </td>
 
-                    <td>{{item.amount}}</td>
+                    <td>{{item.amount | currency}}</td>
 
                     <td class="text-center">
                       <button title="Edit item" type="button" class="btn btn-default waves-effect" ng-if="!item.$edit" ng-click="item.$edit = true"><i class="glyphicon glyphicon-pencil"></i></button>
@@ -280,7 +280,7 @@
 
         <div class='row'>
           <div class='col-sm-4 pull-right text-right'>
-            <span ng-if="vm.invoice.total">Total: ${{vm.invoice.total}}</span>
+            <span ng-if="vm.invoice.total">Total: {{vm.invoice.total | currency}}</span>
             <span ng-if="!vm.invoice.total">Total: $0</span>
           </div>
         </div>
@@ -329,6 +329,7 @@
       </fieldset>
       <div class="form-group pull-right">
         <!--<button type="submit" class="btn btn-default">{{vm.invoice._id ? 'Update' : 'Create'}}</button>-->
+        <button type="button" class="btn btn-lg btn-danger btn-default waves-effect" ng-click="vm.saveDraft()"><i class="zmdi zmdi-eye zmdi-hc-fw"></i>Save Draft</button>
         <button type="button" class="btn btn-lg btn-primary btn-default waves-effect" ng-click="vm.openModal(vm.invoice, vm.form.invoiceForm.$valid)"><i class="zmdi zmdi-eye zmdi-hc-fw"></i>Send invoice</button>
       </div>
       <div ng-show="vm.error" class="text-danger">

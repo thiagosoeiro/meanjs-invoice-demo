@@ -9,9 +9,21 @@
   menuConfig.$inject = ['menuService'];
 
   function menuConfig(Menus) {
+    
+    // Menus.addSubMenuItem('topbar', 'admin', {
+    //   title: 'List Sent Invoices',
+    //   state: 'admin.invoices.list'
+    // });
+
     Menus.addSubMenuItem('topbar', 'admin', {
-      title: 'Manage Invoices',
-      state: 'admin.invoices.list'
+      title: 'Create New Invoice',
+      state: 'admin.invoices.create'
+    });
+
+
+    Menus.addSubMenuItem('topbar', 'admin', {
+      title: 'Manage Drafts',
+      state: 'admin.drafts.list'
     });
   }
 }());

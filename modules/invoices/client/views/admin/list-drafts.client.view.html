@@ -1,0 +1,28 @@
+﻿<section>
+  <div class="page-header">
+    <h1>
+      Drafts
+    </h1>
+  </div>
+  <div class="list-group">
+    <a data-ng-repeat="invoice in vm.invoices | filter: { isEditable: true }" data-ui-sref="admin.invoices.edit({invoiceId: invoice._id})"
+      class="list-group-item">
+      <small class="list-group-item-text">
+        Draft archived on
+        <span data-ng-bind="invoice.created | date:'mediumDate'"></span>
+        by
+        <span ng-if="invoice.user" ng-bind="invoice.user.displayName"></span>
+        <span ng-if="!invoice.user">Deleted User</span>
+      </small>
+      <h4 class="list-group-item-heading"><span>{{invoice.title}} - #{{invoice.number}}</span></h4>
+      <span></span>
+
+      <button style="margin-top:-35px !important" class="btn btn-primary list-group-item-text pull-right small" ng-click="vm.remove(invoice)">
+          <i class="glyphicon glyphicon-trash"></i>
+        </button>
+    </a>
+  </div>
+  <div class="alert alert-warning text-center" data-ng-if="vm.invoices.$resolved && !(vm.invoices | filter: { isEditable: true }).length">
+    No drafts yet!
+  </div>
+</section>

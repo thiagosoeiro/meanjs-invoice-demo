@@ -17,7 +17,7 @@
     vm.authentication = Authentication;
     vm.form = {};
     vm.remove = remove;
-    vm.save = save; //not in use here
+    vm.saveDraft = saveDraft; //not in use here
 
     vm.newItem = {};
 
@@ -32,20 +32,20 @@
     }
 
     // Save Invoice
-    function save(isValid) {
-      if (!isValid) {
-        $scope.$broadcast('show-errors-check-validity', 'vm.form.invoiceForm');
-        return false;
-      }
-
-      // Create a new invoice, or update the current instance
+    function saveDraft() {
+      // if (!isValid) {
+      //   $scope.$broadcast('show-errors-check-validity', 'vm.form.invoiceForm');
+      //   return false;
+      // }
+      // Create a new draft, or update the current instance
+      vm.invoice.isEditable = true;
       vm.invoice.createOrUpdate()
         .then(successCallback)
         .catch(errorCallback);
 
       function successCallback(res) {
-        $state.go('admin.invoices.list'); // should we send the User to the list or the updated Invoice's view?
-        Notification.success({ message: '<i class="glyphicon glyphicon-ok"></i> Invoice saved successfully!' });
+        $state.go('admin.drafts.list');
+        Notification.success({ message: '<i class="glyphicon glyphicon-ok"></i> Draft saved successfully!' });
       }
 
       function errorCallback(res) {
@@ -157,7 +157,8 @@
     };
 
     $scope.$on("refreshInvoicePage", function () {
-      $state.go($state.current, {}, { reload: true });
+      // $state.go($state.current, {}, { reload: true });
+      $state.go('invoices.list');
       $timeout(showAlert, 500);
     });
 

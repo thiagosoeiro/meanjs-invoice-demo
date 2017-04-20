@@ -3,7 +3,7 @@
     <h1>Invoices</h1>
   </div>
   <div class="list-group">
-    <a ng-repeat="invoice in vm.invoices" ui-sref="invoices.view({ invoiceId: invoice._id })" class="list-group-item">
+    <a ng-repeat="invoice in vm.invoices | filter: { isEditable: false }" ui-sref="invoices.view({ invoiceId: invoice._id })" class="list-group-item">
       <small class="list-group-item-text">
         Posted on
         <span ng-bind="invoice.created | date:'mediumDate'"></span>

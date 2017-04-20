@@ -23,7 +23,7 @@
         vm.isLoading = false;
         return false;
       }
-
+      vm.invoice.isEditable = false;
       vm.invoice.createOrUpdate()
         .then(successCallback)
         .catch(errorCallback);
