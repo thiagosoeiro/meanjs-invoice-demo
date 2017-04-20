@@ -54,38 +54,8 @@
       // create mock invoice
       mockInvoice = new InvoicesService({
         _id: '525a8422f6d0f87f0e407a33',
-        "title": "New Invoice",
-        "content": "Content",
-        "items": [
-          {
-            "description": "Product 1",
-            "quantity": "10",
-            "rate": 2,
-            "amount": 20
-          },
-          {
-            "description": "Product 2",
-            "quantity": "3",
-            "rate": 6,
-            "amount": 18
-          }
-        ],
-        "number": "1632",
-        "senderName": "Eric",
-        "receiverName": "Paul",
-        "paymentTerms": "Payments terms",
-        "senderEmail": "eric@eric.com",
-        "receiverEmail": "paul@paul.com",
-        "invoiceDate": "2017/03/01",
-        "invoiceDueDate": "2017/03/10",
-        "total": 38,
-        "balanceDue": 18,
-        "amountPaid": 20,
-        "notes": "Notes",
-        "terms": "Terms",
-        "subject": "Invoice from Eric | # 1632",
-        "message": "Hi Paul,\nThe following invoice has been created on your account:\nInvoice Number: 1632\nFrom: Eric\nBalance Due: 18\nTotal: 38\nAmount Paid: 20\nNotes: Notes\nTerms: Terms",
-        "isEditable": "false"
+        title: 'An Invoice about MEAN',
+        content: 'MEAN rocks!'
       });
 
       // Mock logged in user
@@ -132,14 +102,8 @@
         expect($state.go).toHaveBeenCalledWith('admin.invoices.list');
       }));
 
-
-    describe('vm.save() as update', function () {
-      beforeEach(function () {
-        // Mock invoice in $scope
-        $scope.vm.invoice = mockInvoice;
-      });
-
     });
+
 
     describe('vm.remove()', function () {
       beforeEach(function () {
