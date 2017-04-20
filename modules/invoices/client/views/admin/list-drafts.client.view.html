@@ -16,10 +16,6 @@
       </small>
       <h4 class="list-group-item-heading"><span>{{invoice.title}} - #{{invoice.number}}</span></h4>
       <span></span>
-
-      <button style="margin-top:-35px !important" class="btn btn-primary list-group-item-text pull-right small" ng-click="vm.remove(invoice)">
-          <i class="glyphicon glyphicon-trash"></i>
-        </button>
     </a>
   </div>
   <div class="alert alert-warning text-center" data-ng-if="vm.invoices.$resolved && !(vm.invoices | filter: { isEditable: true }).length">
