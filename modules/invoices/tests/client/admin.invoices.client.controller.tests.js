@@ -99,7 +99,7 @@
         // Test Notification success was called
         expect(Notification.success).toHaveBeenCalledWith({ message: '<i class="glyphicon glyphicon-ok"></i> Draft saved successfully!' });
         // Test URL redirection after the invoice was created
-        expect($state.go).toHaveBeenCalledWith('admin.invoices.list');
+        expect($state.go).toHaveBeenCalledWith('admin.drafts.list');
       }));
 
       it('should call Notification.error if error', function () {
