@@ -30,7 +30,7 @@
             break;
           case 404:
             //workaround for meteor delete draft bug bypass - original: not-found
-            $injector.get('$state').go('admin.drafts.list', { message: rejection.data.message });
+            $injector.get('$state').go('not-found', { message: rejection.data.message });
             break;
           case -1:  // Handle error if no response from server(Network Lost or Server not responding)
             var Notification = $injector.get('Notification');
